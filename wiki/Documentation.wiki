@@ -2,4 +2,8 @@
 This page links to all documentation concerning FBMS.
 
 == Main documentation ==
-  * [https://code.google.com/p/fbms/wiki/TechnicalDetails Technical details document]
+  * [https://code.google.com/p/fbms/wiki/TechnicalDetails Technical details document] - Contains an in-depth description of the interior workings of the project, including helpful API and library links
+  * [https://code.google.com/p/fbms/wiki/CodingDocument Coding Document] - Documents the code layout and break down, UML diagrams, who does what, etc
+
+== Hand in work ==
+  * [https://code.google.com/p/fbms/wiki/EarlyProjectProposal Early Project Proposal] - Milestone 2
