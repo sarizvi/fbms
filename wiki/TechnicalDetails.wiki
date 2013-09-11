@@ -30,7 +30,7 @@ And we want to revert to the revision at time 1378864100 (which can be converted
 
 The program performs backups at specified intervals.
 
-_`[`The following paragraph is low priority`]`_ The user can configure the software to keep either maximum number of diff files or a maximum total file size used by diff files. If a maximum is configured, when creating a backup file, the program should evaluate whether or not the diffs have exceeded their limit. If they have, delete the _oldest_ diff (if there's a limit to the number of diff files) or delete diffs until they are under the maximum total file size (if there's a limit on filesize). Or both, if that's what the user specified.
+*Edit:* _This paragraph should probably be treated as an optional feature for later, if there's time._ The user can configure the software to keep either maximum number of diff files or a maximum total file size used by diff files. If a maximum is configured, when creating a backup file, the program should evaluate whether or not the diffs have exceeded their limit. If they have, delete the _oldest_ diff (if there's a limit to the number of diff files) or delete diffs until they are under the maximum total file size (if there's a limit on filesize). Or both, if that's what the user specified.
 
 === Graphical user interface ===
 The GUI should appear as a file browser, perhaps in a list format [http://processheap.files.wordpress.com/2010/11/7zip.png similar to the 7zip file manager]. The File class [[http://docs.oracle.com/javase/7/docs/api/java/io/File.html API]] will be useful for finding and listing files. We can possibly use `getSystemIcon()` [[http://docs.oracle.com/javase/7/docs/api/javax/swing/filechooser/FileSystemView.html#getSystemIcon%28java.io.File%29 API]] to display an icon in the list.
@@ -61,12 +61,16 @@ The most important features of the GUI are the ability to view older revisions a
 
 The revert feature should do the same, but instead of opening the file in the system's default program, backup the created file (and make a diff for it). This method ensures that the existing diffs are still available and in the correct order (and that we can revert our revert).
 
+The program should not quit when the window is closed. Instead, it should run in the background so backup can go on. This also means the GUI must be done in a separate thread. A system tray ("taskbar") icon should be displayed, and clicking it would open the GUI window [[http://docs.oracle.com/javase/7/docs/api/java/awt/SystemTray.html API]].
+
 == Other features ==
 *These features are optional possibilities that can be implemented _once all the above is done_, if time allows.*
 
   * Allow revisions to be deleted from the revision select screen. This is pretty straightforward: just delete the diff.
   * Inside the file browser, allow the user to copy, paste, cut, move, and rename files. It should be possible to do this from either a menu bar [[http://docs.oracle.com/javase/7/docs/api/javax/swing/JMenuBar.html API]] or a right-click context menu [[http://docs.oracle.com/javase/7/docs/api/javax/swing/JPopupMenu.html API]].
-  * Perhaps the bit about setting limits on the number of diffs there can be for a single file at one time should be considered "optional"?
+  * Restoring entire folders from a revision before x date. Complex because it's possible that there won't be any revisions before the given date, or the revisions may have different times.
+  * Implement a "one click restore" to restore the live directory from the backup. Easy to implement: just delete the live directory and copy the backup over it. Or perhaps ask the user if they want to delete their existing files (do they want to mirror the backup or just restore it?)
+  * The bit about setting limits on the number of diffs there can be for a single file at one time should be considered optional.
   * Other ideas?
 
 == See also ==
