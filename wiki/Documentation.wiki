@@ -2,4 +2,4 @@
 This page links to all documentation concerning FBMS.
 
 == Main documentation ==
-  * Technical details document
+  * [https://code.google.com/p/fbms/wiki/TechnicalDetails Technical details document]
