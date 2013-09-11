@@ -30,7 +30,7 @@ And we want to revert to the revision at time 1378864100 (which can be converted
 
 The program performs backups at specified intervals.
 
-_[The following paragraph is low priority]_ The user can configure the software to keep either maximum number of diff files or a maximum total file size used by diff files. If a maximum is configured, when creating a backup file, the program should evaluate whether or not the diffs have exceeded their limit. If they have, delete the _oldest_ diff (if there's a limit to the number of diff files) or delete diffs until they are under the maximum total file size (if there's a limit on filesize). Or both, if that's what the user specified.
+_`[`The following paragraph is low priority`]`_ The user can configure the software to keep either maximum number of diff files or a maximum total file size used by diff files. If a maximum is configured, when creating a backup file, the program should evaluate whether or not the diffs have exceeded their limit. If they have, delete the _oldest_ diff (if there's a limit to the number of diff files) or delete diffs until they are under the maximum total file size (if there's a limit on filesize). Or both, if that's what the user specified.
 
 === Graphical user interface ===
 The GUI should appear as a file browser, perhaps in a list format [http://processheap.files.wordpress.com/2010/11/7zip.png similar to the 7zip file manager]. The File class [[http://docs.oracle.com/javase/7/docs/api/java/io/File.html API]] will be useful for finding and listing files. We can possibly use `getSystemIcon()` [[http://docs.oracle.com/javase/7/docs/api/javax/swing/filechooser/FileSystemView.html#getSystemIcon%28java.io.File%29 API]] to display an icon in the list.
