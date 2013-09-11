@@ -1,4 +1,57 @@
 #labels Phase-Design,Phase-Implementation
-*TODO*
+This page breaks the product into portions for ease of editing. Cross-reference this page with the [https://code.google.com/p/fbms/wiki/TechnicalDetails technical details document], as that contains the big picture and many links to useful API classes and methods. This document assumes you've already read the technical details (which you should do first, as it's higher level).
 
-This page will break the project into portions that can be coded and will (eventually) assign people to portions. UML and planning goes here.
+*This is a complete work in progress*. Edit as you will. Major changes should be discussed in the comments. Don't forget a message for the commit log!
+
+This list does not include any optional stuff, yet. The maximum diff count and total file size are not included here, I'm starting to think that should be optional for later.
+
+==Backup class==
+  * Methods that take in a file path take the _relative_ path, since the object holds the paths to the live and backup folders.
+  * Backup class gets the path to the live and backup folders from the Configuration object.
+  * *backupTraversal* - Takes in a folder path. Traverse files by checking if there are any folders. If so, go into the folders one by one. If not, parse all files in the current folder one by one and return when done. This is a recursive function. On each folder, we'll have to create an identical folder in the backup directory. On each file, we'll have to check if the file exists in the backup directory. If so, call the getCRC function and compare the files. If they're different, call the createDiff function to create a diff for the file. Finally, calls copyFile to create the backup. Also, skip the file if its relative path matches one of the ones in the Configuration's array of paths to skip.
+  * *getCRC* - Takes in a file path. Calculates the CRC value for the file. [http://stackoverflow.com/a/7776121 See this for implementation details].
+  * *createDiff* - Takes in a file path. Creates the diff for the file [[http://code.google.com/p/java-diff-utils/ LIB]] and places it in the appropriate folder.
+  * *copyFile* - Takes in a file path. Copies the file to backup folder, overwriting the previous file.
+
+==FileOp class==
+  * Performs file operations for the GUI (controller).
+  * Parameters include the relative path to the working directory.
+  * *changeCurrentFolder* - Changes the working (relative) directory. Takes in a folder name. If given `../`, go up a folder (to the last slash).
+  * *getFolders* - Returns the names of all folders inside the working directory, if any.
+  * *getFolderInfo* - Takes in a folder name and returns a FolderInfo object of information about it.
+  * *getFiles* - Returns the names of all files inside the working directory, if any.
+  * *getFileInfo* - Takes in a file name and returns a FileInfo object of information about it.
+  * *getRevisionList* - Returns an array of revision dates (as they appear on the file). Thus, each of these corresponds to a file.
+  * *getRevision* - Takes in a path to a diff file. Returns a path to a temporary file (the name should be the same as the diff file name) that has the contents of the revision. To get this, the method must first copy the contents of the backup file into the diff file. Next, the method must look for all diff files (in the same folder) that have the same prefix (that is, everything up to the numbers; use regex to capture it, look at Mather.group [[http://docs.oracle.com/javase/7/docs/api/java/util/regex/Matcher.html API]]). Finally, apply all of these diffs in reverse chronological order (newest to oldest) using the applyDiff function. The returned temporary file can then be used to view the revision.
+  * *applyDiff* - Takes in a path to a file and a path to a diff, then applies the diff to that file. Basically the opposite of Backup.createDiff (so should probably be implemented by the same person).
+  * *revertFile* - Takes in a path to a file to revert. Uses getRevision to create a temporary file of a revision, then creates a diff of that with Backup.createDiff and finally copies that temporary file over the backup file.
+
+==FolderInfo==
+  * Plain old data class used to allow getFolderInfo to return a lot of info about folders]
+  * Parameters: lastModifiedDate, createdDate, lastAccessDate (all from `Files.readAttributes`). Others?
+
+==FileInfo==
+  * Like FolderInfo, but for files.
+  * Similar parameters, but also the size, number of diff files, and size of diff files
+
+==Configuration class==
+  * Handles the configuration file (INI file)
+  * Has parameters for all the INI options and an array of strings for the files to skip
+  * *createINI* - Takes in the values for all the INI options and creates the file (see the technical details document for the INI structure). File name is "config.ini"
+  * *readINI* - Reads in the INI file and sets the parameters accordingly (can we assume the INI file has no comments or blocks?). This function should be called on program startup, as the program needs to know paths and such from the Configuration object. Also should be called when an INI is created ("saved"), so that the INI file is re-read.
+  * *createSkipFile* - Takes in an array of Strings. Creates a file of paths to skip. New line deliminated. File name is "skip.txt".
+  * *getSkipFile* - Gets the file of paths to skip and parses it into an array of strings, which it stores as a parameter.
+  * *getters for all parameters* - Nuf said. Used by other portions of the program to find information like the backup path.
+
+==GUI class==
+  * Handles the GUI, of course. *Needs to be in a separate thread so that backup can occur at the same time*. Alternatively, we could have the backup run as a separate program, letting the GUI work standalone. Would need more work, though.
+  * *createWindow* - Creates the browsing window, initializes all the GUI stuff. Initializes to the backup directory (can't leave the backup directory!). Calls FileOp methods, namely getFolders, getFolderInfo, getFiles, and getFilesInfo to get the data it needs to populate the list of files. List should be a JList in a JScrollPane. Also should be a menu bar that has options such as "settings", "revisions", etc.
+  * *openSettingsWindow* - Opens a window for changing the settings. Should have a save and cancel button for saving the settings (calling the createINI and createSkipFile methods of Configuration).
+  * *refreshWindow* - Refreshes the window's scroll pane (after navigating into a folder). Changes the working directory and calls the FileOp methods again.
+  * *openRevisionWindow* - Opens a window with another list in a scroll pane. Populated with data from FileOp.getRevisionList (but formatted to a human readable date). Also displays two buttons: "view revision" and "revert revision". The revert should ask for confirmation. Both call their appropriate functions from FileOp.
+
+==Notes==
+  * Everyone should read through the documentation in depth. We need to make sure that our documentation is detailed, unambiguous, and most importantly: works. There's plenty of time for this. Got better ideas? Modify this page. Big changes should be discussed first. At the time of writing the first draft, this is a rough outline that could use some fleshing out.
+  * Hardest methods to implement include GUI.createWindow, FileOp.applyDiff, FileOp.getRevision, Backup.backupTraversal, backup.getCRC, and backup.createDiff. We should try and spread out the hard stuff so no one gets stuck doing all the difficult work.
+  * Use Test Driven Development heavily, since we won't have all the components necessary to do real testing until later.
+  * Commit often, but don't commit if you have known bugs.
