@@ -1,1 +1,73 @@
-This page is a WIP.
+#labels Phase-Design,Phase-Implementation
+This page details the workings of FBMS in great detail.
+
+== Overview ==
+FBMS is an automated backup and revision program. The user specifies a folder or folders that they want to back up and the location that they want to place the backup. The program will scan this folder, calculating the [http://en.wikipedia.org/wiki/CRC32 CRC32] of the file to determine if it has changed in the live folder. If so, the file is copied into the backup folder.
+
+The program also keeps track of older versions by creating diffs of the file in a separate folder.
+
+From a graphical user interface, the user can traverse the backup folder, performing operations like restoring a file from backup, reverting to an earlier revision, etc. Operations like moving and renaming in the backup folder are reflected in the live folder.
+
+== Specifics ==
+=== Backing up ===
+When backing up a file, the program will first check if a file of the same name exists in the backup folder (which means it should have the same path, relative to the chosen folder). If the file exists, the program generates a CRC32 [[http://docs.oracle.com/javase/7/docs/api/java/util/zip/CRC32.html API]] of both files. If the CRC is not a match, then the file must have been changed.
+
+Since the file has been changed, it needs to be backed up. Before copying the file into the backup folder, the program first makes a diff [[http://code.google.com/p/java-diff-utils/ LIB]] of the difference between the files (treating the file in the backup folder as the old file). This diff is placed in a folder named `.fbms` located in the root of the backup folder. Inside this hidden directory, the folder structure of the backup folder is replicated, and diff files are saved in the same relative folder. The name of the file is `<original file name>-<milliseconds since Unix epoch>.diff` [[http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/System.html#currentTimeMillis%28%29 API]].
+
+For example, suppose the live folder is located at `~/a/b/c` and the backup folder is located at `~/z`. If there's a file named `file.txt` located at  `d/e/file.txt` of the live folder, then its backup should be located at `~/z/d/e/file.txt`. The diff might be located at `~/z/.fbms/d/e/file.txt-1378864831.diff`.
+
+Notice how the path relative to the live directory (`d/e/`) is used to locate both the backup and diff. Also note that the file extension is included in the diff file. This is necessary to prevent conflicts (eg, when a folder has both `a.txt` and `a.c` in it). The number is simply the milliseconds since 1970-01-01, which is the [http://en.wikipedia.org/wiki/Unix_Epoch Unix epoch] and the value returned by `System.currentTimeMillis()`. This ensures all diffs have a unique file name. Since the creation of a diff will certainly take much longer than a millisecond, we can regard the names as unique.
+
+To revert to a diff, we need to revert every diff in order first (based on the millisecond time value). So if we have the following files:
+
+{{{
+file.txt-1378864300.diff
+file.txt-1378864200.diff
+file.txt-1378864100.diff
+}}}
+
+And we want to revert to the revision at time 1378864100 (which can be converted to the more sane _"Wed, 11 Sep 2013 01:48:20 UTC"_ by [http://docs.oracle.com/javase/7/docs/api/java/util/Date.html#Date%28long%29 the Date class]), then we must first apply the diffs generated at later dates, namely `file.txt-1378864300.diff` and `file.txt-1378864200.diff`.
+
+The program performs backups at specified intervals.
+
+_[The following paragraph is low priority]_ The user can configure the software to keep either maximum number of diff files or a maximum total file size used by diff files. If a maximum is configured, when creating a backup file, the program should evaluate whether or not the diffs have exceeded their limit. If they have, delete the _oldest_ diff (if there's a limit to the number of diff files) or delete diffs until they are under the maximum total file size (if there's a limit on filesize). Or both, if that's what the user specified.
+
+=== Graphical user interface ===
+The GUI should appear as a file browser, perhaps in a list format [http://processheap.files.wordpress.com/2010/11/7zip.png similar to the 7zip file manager]. The File class [[http://docs.oracle.com/javase/7/docs/api/java/io/File.html API]] will be useful for finding and listing files. We can possibly use `getSystemIcon()` [[http://docs.oracle.com/javase/7/docs/api/javax/swing/filechooser/FileSystemView.html#getSystemIcon%28java.io.File%29 API]] to display an icon in the list.
+
+We should implement functions to return details of the files in a directory, so as to reduce the amount of work needed in the GUI (Model-View-Controller, if you will).
+
+The GUI should display information about the file or folder [[http://docs.oracle.com/javase/7/docs/api/java/nio/file/Files.html API]] as well as the amount of storage that is being used for its diff files (if any).
+
+The GUI should also allow access to an options window (from the menubar). Settings that should be possible to change include the interval to check for file changes, maximum diff count and/or size, and a list of files/folders to ignore.
+
+When saving the settings, most settings should be saved to a single INI file, which can be easily parsed on its own, or we could use a [http://ini4j.sourceforge.net/ library] (which is likely overkill if we don't place comments or blocks in the file, ie, simply variable name, an equal sign, and the value, as demonstrated below).
+
+Sample INI file (just a demo of the format):
+
+{{{
+live-folder=/home/mike/workspace
+backup-folder=/home/mike/backup
+interval=100
+max-diffs=50
+max-size=51200
+}}}
+
+As we can see, an INI file can be as simple to parse as reading each line and splitting the string at the equal sign.
+
+The list of files to skip (never back up) should simply be a text file of newline separated file paths (relative to the live folder). The backup scanner should not backup these files at all.
+
+The most important features of the GUI are the ability to view older revisions and revert to them. To do this, the right click menu (and menu bar) should have an option to view older revisions of a file. Choosing this should open a small window with a list of revisions and the date/time the revision was saved. The user should be able to select a revision here. Beside this list should be two buttons: "View" and "Revert". The former creates a copy of the file in question as a temporary file, applies the diff(s) to that file, and opens it in the system's default program for the file type [[http://docs.oracle.com/javase/7/docs/api/java/awt/Desktop.html#open%28java.io.File%29 API]].
+
+The revert feature should do the same, but instead of opening the file in the system's default program, backup the created file (and make a diff for it). This method ensures that the existing diffs are still available and in the correct order (and that we can revert our revert).
+
+== Other features ==
+*These features are optional possibilities that can be implemented _once all the above is done_, if time allows.*
+
+  * Allow revisions to be deleted from the revision select screen. This is pretty straightforward: just delete the diff.
+  * Inside the file browser, allow the user to copy, paste, cut, move, and rename files. It should be possible to do this from either a menu bar [[http://docs.oracle.com/javase/7/docs/api/javax/swing/JMenuBar.html API]] or a right-click context menu [[http://docs.oracle.com/javase/7/docs/api/javax/swing/JPopupMenu.html API]].
+  * Perhaps the bit about setting limits on the number of diffs there can be for a single file at one time should be considered "optional"?
+  * Other ideas?
+
+== See also ==
+  * [https://code.google.com/p/fbms/wiki/EarlyProjectProposal Early Project Proposal]
