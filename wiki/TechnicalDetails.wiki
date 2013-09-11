@@ -71,3 +71,4 @@ The revert feature should do the same, but instead of opening the file in the sy
 
 == See also ==
   * [https://code.google.com/p/fbms/wiki/EarlyProjectProposal Early Project Proposal]
+  * [https://code.google.com/p/fbms/wiki/FinalProjectProposal Final Project Proposal]
