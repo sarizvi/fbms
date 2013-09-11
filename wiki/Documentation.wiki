@@ -1,0 +1,5 @@
+#labels Phase-Requirements,Phase-Design,Phase-Implementation
+This page links to all documentation concerning FBMS.
+
+== Main documentation ==
+  * Technical details document
