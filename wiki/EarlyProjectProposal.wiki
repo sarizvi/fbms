@@ -5,34 +5,68 @@ Version control systems are powerful tools, but often outside of the grasp and i
 
 Unlike Google Drive and Dropbox, FBMS allows users to keep old file revisions for as long as you want. Revisions are as compact as can be, being stored as incremental diff files. Users can, at their discretion, specify limits to how long or how many older revisions they want to keep.
 
-==Work Unit Decomposition==
-We decomposed the student advising system into the following components.
+So easy a liberal arts major could use it!
 
-  # *GUI development*
-    * *Assigned to*: Blah
-    * *Work Unit Goal*: Blah
-    * *Users*: Blah
-    * *Use Cases*: Blah
-      * Blah
-      * Blah
-  # *Blah*
-    * *Assigned to*: Blah
-    * *Work Unit Goal*: Blah
-    * *Users*: Blah
-    * *Use Cases*: Blah
-      * Blah
-      * Blah
-  # *Blah*
-    * *Assigned to*: Blah
-    * *Work Unit Goal*: Blah
-    * *Users*: Blah
-    * *Use Cases*: Blah
-      * Blah
-      * Blah
-  # *Blah*
-    * *Assigned to*: Blah
-    * *Work Unit Goal*: Blah
-    * *Users*: Blah
-    * *Use Cases*: Blah
-      * Blah
-      * Blah
+==Work Unit Decomposition==
+We decomposed FBMS into the following components.
+
+  # *Graphical user interface*
+    * *Assigned to*: ?
+    * *Work Unit Goal*: This component creates the interface that the user can use to browse their backup folder, allowing them to restore files or revert to older versions. It is a display module only, and retrieves all data from other modules.
+    * *Users*: Standard user
+    * *Use Cases*: 
+      * User wants to revert a file to an older version
+      * User wants to recover a deleted file
+      * User wants to view how much storage their backup is using
+  # *Database module*
+    * *Assigned to*: ?
+    * *Work Unit Goal*: This component works as a wrapper for database functions. It includes methods for retrieving and saving specified data from the database.
+    * *Users*: System
+    * *Use Cases*: 
+      * All
+  # *File operation module*
+    * *Assigned to*: ?
+    * *Work Unit Goal*: This component is used as a wrapper for file system operations, such as copying files, and applying and creating diffs.
+    * *Users*: System
+    * *Use Cases*: 
+      * User modifies a file
+      * User renames a file
+      * User wants to revert a file to an older version
+      * User accidentally deleted a file in their working folder and wants to recover it
+  # *File history module*
+    * *Assigned to*: ?
+    * *Work Unit Goal*: This component retrieves data pertaining to the diffs which make up the file revision history by interacting with the database module.
+    * *Users*: System
+    * *Use Cases*: 
+      * User modifies a file
+      * User renames a file
+      * User wants to revert a file to an older version
+      * User wants to view how much storage their backup is using
+  # * Control module*
+    * *Assigned to*: ?
+    * *Work Unit Goal*: This component controls the various service modules which make up the backend of the program. It receives changes from the watching module and sends appropriate instructions to the file history and file operation modules.
+    * *Users*: System
+    * *Use Cases*: 
+      * All
+  # *Watching module*
+    * *Assigned to*: ?
+    * *Work Unit Goal*: This component watches the live folder for changes and alerts the control module of such changes.
+    * *Users*: System
+    * *Use Cases*: 
+      * User modified a file
+      * User renames a file
+  # *Data module*
+    * *Assigned to*: ?
+    * *Work Unit Goal*: Due to the fact that the backend must run concurrently with the GUI, the data module is used to retrieve information that the GUI model needs, such as the files in a folder, data about these files, and the file history. Interacts with separate versions of the file history, file operations, and database modules.
+    * *Users*: User, System
+    * *Use Cases*:
+      * User wants to revert a file to an older version
+      * User wants to recover a deleted file
+      * User wants to view how much storage their backup is using
+
+==Use cases==
+   * *User wants to revert a file to an older version*: User chooses the file in the GUI. GUI tells data module to revert the specified file to the specified diff. Data module gets diffs from file history module and tells the file operation module to use the diffs to revert the file.
+   * *User wants to recover a deleted file*: User chooses the file in the GUI. GUI tells data module to restore the specified file. Data module tells file operation module to copy file into live folder.
+   * *User wants to view how much storage their backup is using*: User chooses option in the GUI. GUI tells data module to calculate storage space. Data module tells file operation module to calculate the size of the database. File operation module does so and returns info to data module, which tells the GUI to display the calculated size.
+   * *User modifies a file*: Watching module detects change. Control module notices the watching module's alert and tells the file operation module to calculate a diff if an older version exists in the backup folder. Control module then tells file history module to add the diff to the history. Control module then tells file operation module to copy the file into the backup directory.
+   * *User renames a file*: Watching module detects change. Control module notices the watching module's alert and tells the file operation module to rename the file in the backup directory. Control module then tells the file history module to rename the older revision's names (so they belong to the same, renamed file).
