@@ -57,16 +57,16 @@ We decomposed FBMS into the following components.
       * User renames a file
   # *Data module*
     * *Assigned to*: ?
-    * *Work Unit Goal*: Due to the fact that the backend must run concurrently with the GUI, the data module is used to retrieve information that the GUI model needs, such as the files in a folder, data about these files, and the file history. Interacts with separate versions of the file history, file operations, and database modules.
-    * *Users*: User, System
+    * *Work Unit Goal*: Due to the fact that the backend must run concurrently with the GUI, the data module is used to retrieve information that the GUI model needs, such as the files in a folder, data about these files, and the file history. It acts as a data provider and retrieves data from database module.
+    * *Users*: User
     * *Use Cases*:
       * User wants to revert a file to an older version
       * User wants to recover a deleted file
       * User wants to view how much storage their backup is using
 
 ==Use cases==
-   * *User wants to revert a file to an older version*: User chooses the file in the GUI. GUI tells data module to revert the specified file to the specified diff. Data module gets diffs from file history module and tells the file operation module to use the diffs to revert the file.
-   * *User wants to recover a deleted file*: User chooses the file in the GUI. GUI tells data module to restore the specified file. Data module tells file operation module to copy file into live folder.
-   * *User wants to view how much storage their backup is using*: User chooses option in the GUI. GUI tells data module to calculate storage space. Data module tells file operation module to calculate the size of the database. File operation module does so and returns info to data module, which tells the GUI to display the calculated size.
+   * *User wants to revert a file to an older version*: User chooses the file in the GUI. GUI tells control module to revert the specified file to the specified diff. Control module gets diffs from file history module and tells the file operation module to use the diffs to revert the file.
+   * *User wants to recover a deleted file*: User chooses the file in the GUI. GUI tells control module to restore the specified file. Control module tells file operation module to copy file into live folder.
+   * *User wants to view how much storage their backup is using*: User chooses option in the GUI. GUI tells data module to calculate storage space. Data module retrieves information from database and calculate the size, and return it to GUI. 
    * *User modifies a file*: Watching module detects change. Control module notices the watching module's alert and tells the file operation module to calculate a diff if an older version exists in the backup folder. Control module then tells file history module to add the diff to the history. Control module then tells file operation module to copy the file into the backup directory.
    * *User renames a file*: Watching module detects change. Control module notices the watching module's alert and tells the file operation module to rename the file in the backup directory. Control module then tells the file history module to rename the older revision's names (so they belong to the same, renamed file).
