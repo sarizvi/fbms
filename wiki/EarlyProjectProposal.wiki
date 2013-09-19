@@ -1,5 +1,12 @@
 #labels Phase-Requirements
 =File Backup and Management System=
+
+  * Mike Hoffert - mlh374
+  * Syed Ahsan Rizvi - sar457
+  * Hattan Alsharif - haa775
+  * Da Tao - dat293
+  * Michael Butler - mdb815
+
 ==Project Description==
 Version control systems are powerful tools, but often outside of the grasp and interest of casual users. The File Backup and Management System, or FBMS, is a hybrid backup and versioning control system that's low maintenance, easy to use, and ensures the user's files are safe and sound. Akin to programs like Dropbox and Google Drive, FBMS runs in the background, automatically backing up the user's files. Unlike those web services, FBMS runs entirely locally, making it useful where internet access is sporadic or bandwidth is limited. FBMS also does not require subscriptions to a web service, being instead limited by your own hard drive space.
 
