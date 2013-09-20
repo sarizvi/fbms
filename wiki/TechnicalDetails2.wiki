@@ -1,0 +1,79 @@
+This page details the workings of FBMS in great detail.
+
+== Overview ==
+FBMS is an automated backup and revision program. The user specifies a folder that they want to keep backed up (the "live directory") and the location to store the backup (the "backup directory"). The program automatically searches the live directory for changes in intervals, and copies changes to the backup directory. Revisions are automatically created by creating diff ("patch") files for every change.
+
+Thus, not only is the user's data backed up, but older versions of the data are also backed up. FBMS can be thought of as a hybrid of a local-only Dropbox and a version control system. While it's not as customizeable as a version control system like SVN or git, FBMS is easy to use and runs in the background without the need for user interaction.
+
+== A summary of the components ==
+  * *Watcher*: The Watcher component is a file system listener, using the JNotify library. It finds changes to files stores lists of which files have changed, so that the control module can examine the list of changes on each interval.
+  * *FileOp*: The FileOp component performs basic file operations. It can create/apply diff files (using [http://code.google.com/p/java-diff-utils/ java-diff-utils]), copy files, rename files.
+  * *FileHistory*: The FileHistory component performs actions related to file history. It can retrieve revisions for files, rename revisions, and store revisions.
+  * *DbManager*: The DbManager component provides an additional level of abstraction away from the actual database manager (SQLite) by providing methods for performing routine database tasks. The DbManager makes use of the [https://bitbucket.org/xerial/sqlite-jdbc SQLite JDBC library].
+  * *Control*: The Control component manages the other components. For the backend, it runs a threaded loop that checks if the Watcher has found any changes. If changes are detected, it instructs the other components on handling the change (based on the type of change). The Control also receives commands from the GUI, such as to restore a revision.
+  * *Data*: The Data component provides data for the front end. It makes no changes to the data, and merely retrieves it in a format that the FrontEnd can display. Retrieved data includes file information (in a directory) and revision information (for a file).
+  * *FrontEnd*: The FrontEnd component is the GUI. It merely displays the contents of the backup directory (and cannot navigate outside of this directory). The user can select a single file, which opens up a window for restoring and viewing revisions (which is done by the Control). The user can also select a folder to view the contents of that folder (go "into" the folder). An up button takes the user up a directory and a refresh button re-fetches the contents of the current directory.
+
+== Watcher ==
+The Watcher uses the JNotify library to watch for created, modified, and renamed files. It's a simple event handler. When the fileCreated handler is triggered, the file name ("name" refers to the full path of the file) is added to an array list for created files.
+
+Likewise, when the fileModified handler is triggered, the file name is added to an array list for modified files (the reason separate array lists are used will be mentioned in the section on the Control component).
+
+The fileRenamed handler works similarly, but since we have to store both the old name and the new name, it is necessary that we create a plain old data class (a "struct"), so that we can store both the old and last name in a single part of the array list.
+
+Finally, the fileDeleted handler is used to create a list of files that have been deleted. We don't delete files from the backup directory, but rather the list is used so that we don't try to, say, copy a file that was, say, deleted after being created in the same interval.
+
+== Control ==
+=== Watching for changes ===
+The Control uses the array lists which the Watcher has populated. In a separate thread, the Control runs a loop which loops through all the array lists and handles their content. After handling the content of the array lists, the Control empties the lists, so that the lists always contain the files that have been changed since the last interval.
+
+==== Created files ====
+For the files in the created files array list, the control must first determine if the file already exists in the backup directory. If it does, this means that a new file has been created and has overwritten an older file. If this is the case, we must treat the "creation" as though it were simply a modification. Thus, we remove that file from the created array list and put it in the modified array list.
+
+If the file doesn't already exist, the Control simply creates a new FileOp object and tells it to copy the files to the backup directory.
+
+==== Modified files ====
+For modified files, the Control creates a FileOp object to create a diff for the file, comparing the version in the live folder with the one in the backup folder. The diff content is then passed into a FileHistory object, which stores the revision in the database. Finally, the FileOp object copies the files to the backup directory.
+
+==== Renamed files ====
+For renamed files, the Control creates a FileHistory object to rename the file name in the database table (changing instances of the old name to the new name).
+
+==== Deleted files ====
+The deleted file list is NOT used to delete files from the backup folder. After all, we want the backup there in case we accidentally deleted something we didn't want to delete.
+
+Instead, the deleted list is used simply to remove deleted items from the other lists (created, modified, and renamed). After all, if something appears in both, say, the modified and deleted list, that means that the file was modified and then deleted in the same interval. If we tried to create a diff of that file, it'd fail, sine the file no longer exists in the live directory.
+
+==== Files that appear in multiple lists ====
+There's three lists (created, modified, and renamed), but it's entirely possible for a file to have been created, modified, or renamed multiple times in the interval, which would result in the file being in multiple lists. Since the lists simply contain the file name, duplicates contain no value. Thus, we first remove all duplicates in the individual lists before any processing is done.
+
+We also realize that it doesn't make sense for some files to appear in multiple different lists. For example, if a file is created and immediately modified, we don't need multiple revisions, since the modifications are already done. Recall that the lists are simply names of the files, not their content. Thus, for all files that appear in the created list, we must search for any instances of the same file being in the modified list, so we just have a single instance of the file being created.
+
+Similarly, we must search for instances of the newly created file being in the renamed list. If it appears in this list, change the name of the file in the created list (since it's now under a new name).
+
+Otherwise, a file can appear in multiple lists as long as the created list is fully processed first, followed by the modification list, and finally the rename list.
+
+*Example*: A file is modified and renamed within the interval. Thus, it exists in both the modified and renamed list. The lists require no modifications, we simply have to perform the modification as normal and then the rename as normal. The rename will affect all _past_ modifications as well as the one we just made (the intended behavior).
+
+*Example*: A file is created and modified and renamed within the interval. So it exists in three lists. We first notice that the file exists in both the created and modified list. This is redundant, so we remove it from the modified list (leaving it in the created list). We then notice that the file is in the rename list, so we change the name of the file in the created list to the new name (from the rename list). The file now exists in both the created and rename lists. We keep it in the rename list in case the file was an overwrite, in which case we need to rename the older revisions so they are still accessible.
+
+==== Error handling ====
+It's entirely possible that there will be a file in the live directory that cannot be accessed. For example, if the user does not have read access to the file. In such cases, it is crucial that we don't get "stuck". If the program cannot perform an operation to a file, log it as an error (more on logging later) and skip the file.
+
+== FileOp ==
+The FileOp component is an object which can perform some operations on files.
+
+=== Copying ===
+Obviously it's necessary to be able to copy files. FileOp should have two different functions of the same name (an overloaded function) to perform copying. The first is straightforward: the function is given two paths: the source and the destination.
+
+The second is more complicated and used for copying modified/created files. Recall that those files are simply array lists of file names. The function can assume the copying is always done from the live directory to the backup directory. Thus, we remove the live directory path from the file names and prepend the backup directory path before calling the other copy method to copy each individual file. So in other words, this function takes in an array list and copies ALL the files to the backup directory.
+
+Both copy functions must create any necessary folders.
+
+=== Creating a diff ===
+
+
+=THE REMAINDER OF THIS DOCUMENT IS A WIP=
+
+== See also ==
+  * [https://code.google.com/p/fbms/wiki/EarlyProjectProposal Early Project Proposal]
+  * [https://code.google.com/p/fbms/wiki/FinalProjectProposal Final Project Proposal]
