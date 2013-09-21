@@ -1,5 +1,7 @@
 This page details the workings of FBMS in great detail.
 
+<wiki:toc max_depth="4" />
+
 == Overview ==
 FBMS is an automated backup and revision program. The user specifies a folder that they want to keep backed up (the "live directory") and the location to store the backup (the "backup directory"). The program automatically searches the live directory for changes in intervals, and copies changes to the backup directory. Revisions are automatically created by creating diff ("patch") files for every change.
 
