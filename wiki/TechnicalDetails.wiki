@@ -1,77 +1,256 @@
-#labels Phase-Design,Phase-Implementation
 This page details the workings of FBMS in great detail.
 
 == Overview ==
-FBMS is an automated backup and revision program. The user specifies a folder or folders that they want to back up and the location that they want to place the backup. The program will scan this folder, calculating the [http://en.wikipedia.org/wiki/CRC32 CRC32] of the file to determine if it has changed in the live folder. If so, the file is copied into the backup folder.
+FBMS is an automated backup and revision program. The user specifies a folder that they want to keep backed up (the "live directory") and the location to store the backup (the "backup directory"). The program automatically searches the live directory for changes in intervals, and copies changes to the backup directory. Revisions are automatically created by creating diff ("patch") files for every change.
 
-The program also keeps track of older versions by creating diffs of the file in a separate folder.
+Thus, not only is the user's data backed up, but older versions of the data are also backed up. FBMS can be thought of as a hybrid of a local-only Dropbox and a version control system. While it's not as customizeable as a version control system like SVN or git, FBMS is easy to use and runs in the background without the need for user interaction.
 
-From a graphical user interface, the user can traverse the backup folder, performing operations like restoring a file from backup, reverting to an earlier revision, etc. Operations like moving and renaming in the backup folder are reflected in the live folder.
+== A summary of the components ==
+  * *Watcher*: The Watcher component is a file system listener, using the JNotify library. It finds changes to files stores lists of which files have changed, so that the control module can examine the list of changes on each interval.
+  * *FileOp*: The FileOp component performs basic file operations. It can create/apply diff files (using [http://code.google.com/p/java-diff-utils/ java-diff-utils]), copy files, rename files.
+  * *FileHistory*: The FileHistory component performs actions related to file history. It can retrieve revisions for files, rename revisions, and store revisions.
+  * *DbManager*: The DbManager component provides an additional level of abstraction away from the actual database manager (SQLite) by providing methods for performing routine database tasks. The DbManager makes use of the [https://bitbucket.org/xerial/sqlite-jdbc SQLite JDBC library].
+  * *Control*: The Control component manages the other components. For the backend, it runs a threaded loop that checks if the Watcher has found any changes. If changes are detected, it instructs the other components on handling the change (based on the type of change). The Control also receives commands from the GUI, such as to restore a revision. Finally, the Control can manipulate the program's configuration.
+  * *Data*: The Data component provides data for the front end. It makes no changes to the data, and merely retrieves it in a format that the FrontEnd can display. Retrieved data includes file information (in a directory) and revision information (for a file).
+  * *FrontEnd*: The FrontEnd component is the GUI. It merely displays the contents of the backup directory (and cannot navigate outside of this directory). The user can select a single file, which opens up a window for restoring and viewing revisions (which is done by the Control). The user can also select a folder to view the contents of that folder (go "into" the folder). An up button takes the user up a directory and a refresh button re-fetches the contents of the current directory.
 
-== Specifics ==
-=== Backing up ===
-When backing up a file, the program will first check if a file of the same name exists in the backup folder (which means it should have the same path, relative to the chosen folder). If the file exists, the program generates a CRC32 [[http://docs.oracle.com/javase/7/docs/api/java/util/zip/CRC32.html API]] of both files. If the CRC is not a match, then the file must have been changed.
+== Watcher ==
+The Watcher uses the JNotify library to watch for created, modified, and renamed files. It's a simple event handler. When the fileCreated handler is triggered, the file name ("name" refers to the full path of the file) is added to an array list for created files.
 
-Since the file has been changed, it needs to be backed up. Before copying the file into the backup folder, the program first makes a diff [[http://code.google.com/p/java-diff-utils/ LIB]] of the difference between the files (treating the file in the backup folder as the old file). This diff is placed in a folder named `.fbms` located in the root of the backup folder. Inside this hidden directory, the folder structure of the backup folder is replicated, and diff files are saved in the same relative folder. The name of the file is `<original file name>-<milliseconds since Unix epoch>.diff` [[http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/System.html#currentTimeMillis%28%29 API]].
+Likewise, when the fileModified handler is triggered, the file name is added to an array list for modified files (the reason separate array lists are used will be mentioned in the section on the Control component).
 
-For example, suppose the live folder is located at `~/a/b/c` and the backup folder is located at `~/z`. If there's a file named `file.txt` located at  `d/e/file.txt` of the live folder, then its backup should be located at `~/z/d/e/file.txt`. The diff might be located at `~/z/.fbms/d/e/file.txt-1378864831.diff`.
+The fileRenamed handler works similarly, but since we have to store both the old name and the new name, it is necessary that we create a plain old data class (a "struct"), so that we can store both the old and last name in a single part of the array list.
 
-Notice how the path relative to the live directory (`d/e/`) is used to locate both the backup and diff. Also note that the file extension is included in the diff file. This is necessary to prevent conflicts (eg, when a folder has both `a.txt` and `a.c` in it). The number is simply the milliseconds since 1970-01-01, which is the [http://en.wikipedia.org/wiki/Unix_Epoch Unix epoch] and the value returned by `System.currentTimeMillis()`. This ensures all diffs have a unique file name. Since the creation of a diff will certainly take much longer than a millisecond, we can regard the names as unique.
+Finally, the fileDeleted handler is used to create a list of files that have been deleted. We don't delete files from the backup directory, but rather the list is used so that we don't try to, say, copy a file that was, say, deleted after being created in the same interval.
 
-To revert to a diff, we need to revert every diff in order first (based on the millisecond time value). So if we have the following files:
+== Control ==
+=== Watching for changes ===
+The Control uses the array lists which the Watcher has populated. In a separate thread, the Control runs a loop which loops through all the array lists and handles their content. After handling the content of the array lists, the Control empties the lists, so that the lists always contain the files that have been changed since the last interval.
+
+==== Created files ====
+For the files in the created files array list, the control must first determine if the file already exists in the backup directory. If it does, this means that a new file has been created and has overwritten an older file. If this is the case, we must treat the "creation" as though it were simply a modification. Thus, we remove that file from the created array list and put it in the modified array list.
+
+If the file doesn't already exist, the Control simply creates a new FileOp object and tells it to copy the files to the backup directory.
+
+==== Modified files ====
+For modified files, the Control creates a FileOp object to create a diff for the file, comparing the version in the live folder with the one in the backup folder. The diff content is then passed into a FileHistory object, which stores the revision in the database. Finally, the FileOp object copies the files to the backup directory.
+
+==== Renamed files ====
+For renamed files, the Control creates a FileHistory object to rename the file name in the database table (changing instances of the old name to the new name). Then create a new FileOp object and check if a file of the new name already exists in the backup directory. If so, delete that. Either way, use the FileOp object to rename the old file to the new name.
+
+You'll notice that if there was a conflict, we only deleted the conflicting file and not its history. This effectively merged the history of the two files, since file history is dependent only on the file's path.
+
+==== Deleted files ====
+The deleted file list is NOT used to delete files from the backup folder. After all, we want the backup there in case we accidentally deleted something we didn't want to delete.
+
+Instead, the deleted list is used simply to remove deleted items from the other lists (created, modified, and renamed). After all, if something appears in both, say, the modified and deleted list, that means that the file was modified and then deleted in the same interval. If we tried to create a diff of that file, it'd fail, sine the file no longer exists in the live directory.
+
+==== Files that appear in multiple lists ====
+There's three lists (created, modified, and renamed), but it's entirely possible for a file to have been created, modified, or renamed multiple times in the interval, which would result in the file being in multiple lists. Since the lists simply contain the file name, duplicates contain no value. Thus, we first remove all duplicates in the individual lists before any processing is done.
+
+We also realize that it doesn't make sense for some files to appear in multiple different lists. For example, if a file is created and immediately modified, we don't need multiple revisions, since the modifications are already done. Recall that the lists are simply names of the files, not their content. Thus, for all files that appear in the created list, we must search for any instances of the same file being in the modified list, so we just have a single instance of the file being created.
+
+Similarly, we must search for instances of the newly created file being in the renamed list. If it appears in this list, change the name of the file in the created list (since it's now under a new name).
+
+Otherwise, a file can appear in multiple lists as long as the created list is fully processed first, followed by the modification list, and finally the rename list.
+
+*Example*: A file is modified and renamed within the interval. Thus, it exists in both the modified and renamed list. The lists require no modifications, we simply have to perform the modification as normal and then the rename as normal. The rename will affect all _past_ modifications as well as the one we just made (the intended behavior).
+
+*Example*: A file is created and modified and renamed within the interval. So it exists in three lists. We first notice that the file exists in both the created and modified list. This is redundant, so we remove it from the modified list (leaving it in the created list). We then notice that the file is in the rename list, so we change the name of the file in the created list to the new name (from the rename list). The file now exists in both the created and rename lists. We keep it in the rename list in case the file was an overwrite, in which case we need to rename the older revisions so they are still accessible.
+
+==== Error handling ====
+It's entirely possible that there will be a file in the live directory that cannot be accessed. For example, if the user does not have read access to the file. In such cases, it is crucial that we don't get "stuck". If the program cannot perform an operation to a file, log it as an error (more on logging later) and skip the file.
+
+=== Handling GUI commands ===
+There are three circumstances in which the control must handle events triggered by the GUI:
+
+==== Displaying a revision ====
+This occurs when the user selects a revision for a file and chooses to view the revision. The Control uses the FileHistory component to revert a chain of files until a temporary file for the given revision is obtained. The Control then displays that in the user's default program (for that type of file).
+
+==== Displaying the changes in a revision =====
+This occurs when the user selects a revision for a file and chooses to display the changes. It simply needs to show the diff for the revision. It uses FileHistory to get the specified diff and opens it in the user's default program for diff files.
+
+==== Revert to a revision ====
+This occurs when the user selects a revision for a file and chooses to revert to it. It uses the FileHistory component to create a temporary file of the revision. Then the FileOp component is used to create a diff of the new revision against the file in the backup folder. We need to do this because we have to be able to revert the reversion (for example, if the user reverts a file to a revision they had yesterday, then decides they want the version from today, again).
+
+Once the diff is created, it's stored with FileHistory (akin to when a file is modified) and finally the revision is copied over to the live and backup folders.
+
+The revision temporary file should then be deleted.
+
+==== Recover most recent version ====
+This occurs when the user selects a revision for a file and chooses to recover the most recent version. It uses the FileOp component to copy the file from the backup directory into the live directory.
+
+== FileOp ==
+The FileOp component is an object which can perform some operations on files. Meant to be used as a static object, so we can simply call `FileOp.copy("foo", "bar")`.
+
+=== Copying ===
+Obviously it's necessary to be able to copy files. FileOp should have two different functions of the same name (an overloaded function) to perform copying. The first is straightforward: the function is given two paths: the source and the destination.
+
+The second is more complicated and used for copying modified/created files. Recall that those files are simply array lists of file names. The function can assume the copying is always done from the live directory to the backup directory. Thus, we remove the live directory path from the file names and prepend the backup directory path before calling the other copy method to copy each individual file. So in other words, this function takes in an array list and copies ALL the files to the backup directory.
+
+Both copy functions must create any necessary folders and should overwrite the destination.
+
+=== Creating a diff ===
+FileOP can also create a diff of a file. The function uses the [https://code.google.com/p/java-diff-utils/ Java-diff-utils library] to create the diff as a temporary file (note: place temporary files in a subfolder of the application directory, as the system temp folder can sometimes be emptied by the OS at the wrong time). Returns a path to this temporary file.
+
+Note that the temporary file will continue to exist until manually deleted. So functions that create a diff should delete it (using the supplied function) when they're done with the file.
+
+When diffs are created, the should show the changes from the old file (in the backup folder) to the new file (in the live folder).
+
+=== Applying a diff ===
+Applying diffs work the same way, using the Java-diff-tools library. They take in a path to the diff file (which should be a temporary file) and the file to apply the diff to. After applying the diff, it returns another path to a temporary file and deletes the temporary diff file that was passed into the function as a parameter.
+
+We return another path to a temporary file because it is often necessary to revert changes in a chain (more on that later). Also note that we deleted the temporary file that was passed as a parameter, to remove the need to delete it manually.
+
+Diffs must be applied backwards. Since the diff shows the changes from the old file to the new one, we need to reverse apply the diff to revert to an older version.
+
+=== Rename a file ===
+Simply takes in an old path and a new name. Finds the file that matches the old path and renames it to the new name. Note that the old path includes the full path and name, while the new name is JUST the file name (no path). This ensures renaming always changes just the file name.
+
+The function first checks if a file of the new name already exists in the directory that the old file is in. If so, we delete that first. Finally, the function renames the old file to the new name.
+
+=== Delete a file ===
+Simplifies the deletion of a file by taking in a path and deleting the file located at that path.
+
+=== Get file size ===
+Simply takes in a path and returns the size of the file.
+
+=== List-ify a file ===
+The Java-diff-util library uses lists of strings. This method simply reads in a file and converts it into a list of strings (which is returned).
+
+== FileHistory ==
+Manages the revision history of files.
+
+=== Get a specific revision ===
+Takes in a file name and a time stamp, and copies the diff of that time stamp into a temporary file, returning the path to that diff.
+
+=== Store a new revision ===
+Takes in a path to a temporary diff file, a path to the actual file, file size of the old file, and the change in the file size ("delta"). Uses the DbManager functions to store the diff, path, time stamp (of the current time), and delta in the database.
+
+=== Obtaining a specific revision ===
+Takes in a path to a file in the backup directory and the time stamp of the desired revision. The file is copied into a temporary file. Then uses the DbManager to get the database entries up to (and including) the desired revision. With each entry, the FileOp component is used to apply the diff. The new temporary file created by FileOp is then used to apply the next diff, all the way until we get to the diff with the time stamp desired.
+
+Returns a path to a temporary file with the contents of the specified revision.
+
+== DbManager ==
+Simplifies working with the database by providing a series of functions to access and modify the database. There should be only one at a time,, and static. It's essentially a wrapper class for accessing the database.
 
 {{{
-file.txt-1378864300.diff
-file.txt-1378864200.diff
-file.txt-1378864100.diff
+	.
+		NEEDS IMMEDIATE DISCUSSION
+	.
 }}}
 
-And we want to revert to the revision at time 1378864100 (which can be converted to the more sane _"Wed, 11 Sep 2013 01:48:20 UTC"_ by [http://docs.oracle.com/javase/7/docs/api/java/util/Date.html#Date%28long%29 the Date class]), then we must first apply the diffs generated at later dates, namely `file.txt-1378864300.diff` and `file.txt-1378864200.diff`.
+== Data ==
+The Data component queries the DbManager to get the info that the GUI needs.
 
-The program performs backups at specified intervals.
+=== Get folder contents ===
+Takes in a path and returns an array list of FileInfo objects (which is yet another plain old data class that groups information). The FileInfo objects store: folder (a boolean value that is true if the item is a folder and false if it's a regular file), fileSize (in bytes), lastAccessedDate, lastModifiedDate, createdDate, numberOfRevisions, revisionSizes, and fileName.
 
-*Edit:* _This paragraph should probably be treated as an optional feature for later, if there's time._ The user can configure the software to keep either maximum number of diff files or a maximum total file size used by diff files. If a maximum is configured, when creating a backup file, the program should evaluate whether or not the diffs have exceeded their limit. If they have, delete the _oldest_ diff (if there's a limit to the number of diff files) or delete diffs until they are under the maximum total file size (if there's a limit on filesize). Or both, if that's what the user specified.
+It actually takes quite a bit of work to calculate the information such as the number of revisions and revision size, which require cycling through all revisions of a file.
 
-=== Graphical user interface ===
-The GUI should appear as a file browser, perhaps in a list format [http://processheap.files.wordpress.com/2010/11/7zip.png similar to the 7zip file manager]. The File class [[http://docs.oracle.com/javase/7/docs/api/java/io/File.html API]] will be useful for finding and listing files. We can possibly use `getSystemIcon()` [[http://docs.oracle.com/javase/7/docs/api/javax/swing/filechooser/FileSystemView.html#getSystemIcon%28java.io.File%29 API]] to display an icon in the list.
+The array list should be ordered with all folders listed alphabetically first, followed by all regular files listed alphabetically.
 
-We should implement functions to return details of the files in a directory, so as to reduce the amount of work needed in the GUI (Model-View-Controller, if you will).
+Note that folders do not have a file size or revisions.
 
-The GUI should display information about the file or folder [[http://docs.oracle.com/javase/7/docs/api/java/nio/file/Files.html API]] as well as the amount of storage that is being used for its diff files (if any).
+=== Get revision info ===
+Similar to the above section, it takes in a path and returns an array list of RevisionInfo objects (more PoD). The RevisionInfo object stores the time stamp, size of the revision (in bytes), and the delta (change in filesize). All that data is stored in the database, so it's simply a matter of retrieval and restructuring.
 
-The GUI should also allow access to an options window (from the menubar). Settings that should be possible to change include the interval to check for file changes, maximum diff count and/or size, and a list of files/folders to ignore.
+== FrontEnd ==
+The FrontEnd is the GUI of the program. It performs no computation and depends on the Data component to get the information to display and the Control component to perform operations for it.
 
-When saving the settings, most settings should be saved to a single INI file, which can be easily parsed on its own, or we could use a [http://ini4j.sourceforge.net/ library] (which is likely overkill if we don't place comments or blocks in the file, ie, simply variable name, an equal sign, and the value, as demonstrated below).
+The FrontEnd is used to display the contents of the backup directory. It can never leave the backup directory, but can descend into sub-directories.
 
-Sample INI file (just a demo of the format):
+It should use the Data component to get the contents of the current working directory and display these contents appropriately. The FrontEnd should display files with all provided information. Folders should not display anything for the file size or revision information. The FrontEnd should store which entries are folders. Double clicking a folder "goes into" the folder, making that the working directory and getting the folder contents from the Data component.
+
+Double clicking a file, on the other hand, opens up a window which displays the available revisions (also obtained from the Data component), if any. On this window, there should be four buttons: view revision, view changes, revert to revision, and recover most recent all which call the corresponding Control functions.
+
+On the main window, the top of the window has a status bar. The file menu will have options that are currently in limbo (such as reverting all files to a certain time, cleaning out older revisions, etc). In the mean time, it should provide a "View revisions" option (same as double clicking a file), an exit option, and a copy-to option.
+
+The copy-to option open a save dialogue for the current selected file, allowing the user to save a copy of the file in another location. The default folder should be the live directory. Note that both copy-to and view revisions need a file to be selected, and should be greyed out if a file is not selected (including when a folder is selected).
+
+The help menu will have an option for opening the web documentation (to-do in the future).
+
+Also on the main window should be two buttons: up a folder and refresh. Up a folder simply changes the working directory to the previous folder and reloads the folder contents. It should be greyed out when in the backup directory (since we cannot leave that directory). The refresh button simply re-fetches the folder contents (in case the contents have changed).
+
+Beside those buttons is a text field containing the current path. It should display the path relative to the backup directory. For now, the text field should be disabled, so the program can change its contents (and should update that whenever we go up a folder or go into a folder) without the user being able to. In the future, we may allow this to be edited so the user can type a path manually.
+
+The GUI should not cause the program to terminate when the window is closed. Rather, closing the window should create an icon in the system tray. Clicking this icon should recreate the GUI window.
+
+== The database ==
+The database has two tables, one for the revisions and one for the settings (configuration).
+
+The revisions table contains columns for:
+  * *ID*: [INTEGER] Incremented automatically by database. Serves as a means of providing uniqueness to each row.
+  * *Path*: [TEXT] The _full_ path to the file (due to the way file systems work, guaranteed to be unique).
+  * *Diff*: [BLOB] The contents of the diff file.
+  * *Delta*: [INTEGER] The byte difference that the diff introduced.
+  * *Time*: [INTEGER] The date as stored in Unix time (seconds since 1970-01-01 00:00:00 UTC)
+
+The configuration table contains columns for:
+  * *Name*: [TEXT] The name of the setting (must be unique).
+  * *Setting*: [TEXT] The value for the setting.
+
+For the time being, the settings are constrained to the backup and live directory paths. They can be expanded to other settings in the future.
+
+== First time run ==
+The first time the program is run, we need an alternative startup. There must be some way to specify the backup and live directories. The easiest way to do this is to create the database file _after_ the program has been setup. Thus, if there is no database file in the program's folder, it must be the first run.
+
+If that is indeed the case, an alternative portion of the program should be run: create a simple GUI for obtaining the backup and live directory. Once entered, validate their paths and ensure that we can read from the live directory and can write to the backup directory.
+
+If all is good, create the database file, initialize the settings, and then restart the program (which will cause the program to start as though it were not the first time).
+
+The regular portions of the program should not run during this setup stage.
+
+== On normal startups ==
+Load the backup and live directory paths into static, global, constants. Initialize the logger and log levels.
+
+Create the threaded loop that will check for changes in the watched array lists.
+
+Create the system tray icon that will draw the GUI when clicked.
+
+== Use cases ==
+=== User edits a file ===
+  * Watcher notices the file has been modified and places it in the modified files array list.
+  * Control, on its interval, notices the modified files list is not empty.
+  * Control makes a diff using FileOp
+  * Control inserts the diff into the database using FileHistory
+  * Control copies the file to the backup using FileOp
+  * Control empties the modified files array list for the next iteration before sleeping its thread for a short period of time (when the next iteration begins).
+
+=== User wants to revert a file ===
+  * User opens FrontEnd by clicking the program's icon in the system tray.
+  * FrontEnd populates the window with information about folders and files in the backup directory, which it obtained from the Data component.
+  * The user chooses the file that they want, which causes revision window to open.
+  * The FrontEnd populates this window with information about revisions received from the Data component.
+  * The user chooses the revision they want and click the "revert" button.
+  * FrontEnd tells Control the file name and time stamp.
+  * The Control tells the FileHistory component it wants the file as it was at the specified revision
+  * FileHistory reverts the files in reverse order (using the diffs stored in the database) until it has the desired revision.
+  * The Control tells the FileOp component to make a diff of this revision (versus the version in the backup directory).
+  * The Control assigns this diff to the FileHistory component, which stores it as a revision.
+  * The Control tells the FileOp component to copy the file to the live and backup directories.
+  * The Control removes the temporary file that was created by FileHistory in the process.
+
+=== User wants to recover a file ===
+  * User opens FrontEnd by clicking the program's icon in the system tray.
+  * FrontEnd populates the window with information about folders and files in the backup directory, which it obtained from the Data component.
+  * The user chooses the file that they want, which causes revision window to open.
+  * The FrontEnd populates this window with information about revisions received from the Data component.
+  * The user chooses the revision they want and click the "recover most recent" button.
+  * FrontEnd tells Control the file name.
+  * Control copies file from backup directory into live directory.
 
 {{{
-live-folder=/home/mike/workspace
-backup-folder=/home/mike/backup
-interval=100
-max-diffs=50
-max-size=51200
+	This section needs to be expanded. Help yourself.
 }}}
 
-As we can see, an INI file can be as simple to parse as reading each line and splitting the string at the equal sign.
-
-The list of files to skip (never back up) should simply be a text file of newline separated file paths (relative to the live folder). The backup scanner should not backup these files at all.
-
-The most important features of the GUI are the ability to view older revisions and revert to them. To do this, the right click menu (and menu bar) should have an option to view older revisions of a file. Choosing this should open a small window with a list of revisions and the date/time the revision was saved. The user should be able to select a revision here. Beside this list should be two buttons: "View" and "Revert". The former creates a copy of the file in question as a temporary file, applies the diff(s) to that file, and opens it in the system's default program for the file type [[http://docs.oracle.com/javase/7/docs/api/java/awt/Desktop.html#open%28java.io.File%29 API]].
-
-The revert feature should do the same, but instead of opening the file in the system's default program, backup the created file (and make a diff for it). This method ensures that the existing diffs are still available and in the correct order (and that we can revert our revert).
-
-The program should not quit when the window is closed. Instead, it should run in the background so backup can go on. This also means the GUI must be done in a separate thread. A system tray ("taskbar") icon should be displayed, and clicking it would open the GUI window [[http://docs.oracle.com/javase/7/docs/api/java/awt/SystemTray.html API]].
-
-== Other features ==
-*These features are optional possibilities that can be implemented _once all the above is done_, if time allows.*
-
-  * Allow revisions to be deleted from the revision select screen. This is pretty straightforward: just delete the diff.
-  * Inside the file browser, allow the user to copy, paste, cut, move, and rename files. It should be possible to do this from either a menu bar [[http://docs.oracle.com/javase/7/docs/api/javax/swing/JMenuBar.html API]] or a right-click context menu [[http://docs.oracle.com/javase/7/docs/api/javax/swing/JPopupMenu.html API]].
-  * Restoring entire folders from a revision before x date. Complex because it's possible that there won't be any revisions before the given date, or the revisions may have different times.
-  * Implement a "one click restore" to restore the live directory from the backup. Easy to implement: just delete the live directory and copy the backup over it. Or perhaps ask the user if they want to delete their existing files (do they want to mirror the backup or just restore it?)
-  * The bit about setting limits on the number of diffs there can be for a single file at one time should be considered optional.
-  * Other ideas?
+== Notes ==
+  * The time to sleep on an interval has not been determined, but since SQLite stores time with an accuracy of a second, we should probably sleep for at least one second. Testing will hopefully find an optimal value.
+  * It remains to be seen how effective the use of diff files will be on binary files. It may be necessary to store the entire file instead of a diff. If that is the case, we will need to modify the revisions table (or use a separate table for binary files). The change detection would also have to be modified to take into account whether or not the file is a text file.
+  * The program has the limitation in that JNotify only noticed changes while the program is running. It will not notice changes that were made when the program was not running. To counter this, we should iterate through all files in the live directory, comparing their CRCs with the backups, and making revisions when necessary. This only has to be done each time the program is started. For the mean time, this is a reasonable limitation.
+  * The program currently does not facilitate changing the live or backup directories. Changing either directory would be best done with the presumption that the old backup will no longer match the correct live directory. Thus, we could simply delete the database file to make the program think the program is on its first run.
+  * All components should make heavy use of the logger (using the [https://logging.apache.org/log4j/1.2/manual.html log4j library]). All log messages should have appropriate levels set (eg, info, warning, error) so that we can easily toggle between the level of verbosity we need (presumably the final program will only log errors and maybe warnings).
 
 == See also ==
   * [https://code.google.com/p/fbms/wiki/EarlyProjectProposal Early Project Proposal]
