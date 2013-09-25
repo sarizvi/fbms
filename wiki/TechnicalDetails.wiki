@@ -1,3 +1,4 @@
+#labels Phase-Requirements,Phase-Implementation
 This page details the workings of FBMS in great detail.
 
 <wiki:toc max_depth="1" />
@@ -17,28 +18,32 @@ Thus, not only is the user's data backed up, but older versions of the data are 
   * *FrontEnd*: The FrontEnd component is the GUI. It merely displays the contents of the backup directory (and cannot navigate outside of this directory). The user can select a single file, which opens up a window for restoring and viewing revisions (which is done by the Control). The user can also select a folder to view the contents of that folder (go "into" the folder). An up button takes the user up a directory and a refresh button re-fetches the contents of the current directory.
 
 == Watcher ==
-The Watcher uses the JNotify library to watch for created, modified, and renamed files. It's a simple event handler. When the fileCreated handler is triggered, the file name ("name" refers to the full path of the file) is added to an array list for created files.
+The Watcher uses the JNotify library to watch for created, modified, and renamed files. It's a simple event handler. When the fileCreated handler is triggered, the file name ("name" refers to the full path of the file) is added to a list for created files.
 
-Likewise, when the fileModified handler is triggered, the file name is added to an array list for modified files (the reason separate array lists are used will be mentioned in the section on the Control component).
+Likewise, when the fileModified handler is triggered, the file name is added to a list for modified files (the reason separate lists are used will be mentioned in the section on the Control component).
 
-The fileRenamed handler works similarly, but since we have to store both the old name and the new name, it is necessary that we create a plain old data class (a "struct"), so that we can store both the old and last name in a single part of the array list.
+The fileRenamed handler works similarly, but since we have to store both the old name and the new name, it is necessary that we create a plain old data class (a "struct"), so that we can store both the old and last name in a single part of the list.
 
 Finally, the fileDeleted handler is used to create a list of files that have been deleted. We don't delete files from the backup directory, but rather the list is used so that we don't try to, say, copy a file that was, say, deleted after being created in the same interval.
 
 == Control ==
 === Watching for changes ===
-The Control uses the array lists which the Watcher has populated. In a separate thread, the Control runs a loop which loops through all the array lists and handles their content. After handling the content of the array lists, the Control empties the lists, so that the lists always contain the files that have been changed since the last interval.
+The Control uses the lists which the Watcher has populated. In a separate thread, the Control runs a loop which loops through all the array lists and handles their content. After handling the content of the lists, the Control empties the lists, so that the lists always contain the files that have been changed since the last interval.
 
 ==== Created files ====
-For the files in the created files array list, the control must first determine if the file already exists in the backup directory. If it does, this means that a new file has been created and has overwritten an older file. If this is the case, we must treat the "creation" as though it were simply a modification. Thus, we remove that file from the created array list and put it in the modified array list.
+For the files in the created files list, the control must first determine if the file already exists in the backup directory. If it does, this means that a new file has been created and has overwritten an older file. If this is the case, we must treat the "creation" as though it were simply a modification. Thus, we remove that file from the created list and put it in the modified list.
 
-If the file doesn't already exist, the Control simply creates a new FileOp object and tells it to copy the files to the backup directory.
+If the file doesn't already exist, the Control simply tells FileOp to copy the files to the backup directory.
 
 ==== Modified files ====
-For modified files, the Control creates a FileOp object to create a diff for the file, comparing the version in the live folder with the one in the backup folder. The diff content is then passed into a FileHistory object, which stores the revision in the database. Finally, the FileOp object copies the files to the backup directory.
+For modified files, the Control uses FileOp to check if the file is a text file of under 5 MB (?). This is necessary because binary files files do not make efficient diffs. Testing will be necessary to determine what file size limit works best.
+
+For valid text and small files, the Control uses FileOp to create a diff for the file, comparing the version in the live folder with the one in the backup folder. The diff content is then passed into FileHistory, which stores the revision in the database.
+
+For all kinds of files, FileOp copies the files to the backup directory.
 
 ==== Renamed files ====
-For renamed files, the Control creates a FileHistory object to rename the file name in the database table (changing instances of the old name to the new name). Then create a new FileOp object and check if a file of the new name already exists in the backup directory. If so, delete that. Either way, use the FileOp object to rename the old file to the new name.
+For renamed files, the Control uses FileHistory to rename the file name in the database table (changing instances of the old name to the new name). Then FileOp is used check if a file of the new name already exists in the backup directory. If so, delete that. Either way, use FileOp to rename the old file to the new name.
 
 You'll notice that if there was a conflict, we only deleted the conflicting file and not its history. This effectively merged the history of the two files, since file history is dependent only on the file's path.
 
@@ -88,7 +93,7 @@ The FileOp component is an object which can perform some operations on files. Me
 === Copying ===
 Obviously it's necessary to be able to copy files. FileOp should have two different functions of the same name (an overloaded function) to perform copying. The first is straightforward: the function is given two paths: the source and the destination.
 
-The second is more complicated and used for copying modified/created files. Recall that those files are simply array lists of file names. The function can assume the copying is always done from the live directory to the backup directory. Thus, we remove the live directory path from the file names and prepend the backup directory path before calling the other copy method to copy each individual file. So in other words, this function takes in an array list and copies ALL the files to the backup directory.
+The second is more complicated and used for copying modified/created files. Recall that those files are simply lists of file names. The function can assume the copying is always done from the live directory to the backup directory. Thus, we remove the live directory path from the file names and prepend the backup directory path before calling the other copy method to copy each individual file. So in other words, this function takes in a list and copies ALL the files to the backup directory.
 
 Both copy functions must create any necessary folders and should overwrite the destination.
 
@@ -120,6 +125,13 @@ Simply takes in a path and returns the size of the file.
 === List-ify a file ===
 The Java-diff-util library uses lists of strings. This method simply reads in a file and converts it into a list of strings (which is returned).
 
+=== Check file validity ===
+Large files and binary files are not versioned. This function returns true if the file is valid (a small text file) and false otherwise (binary or large files).
+
+To determine if a file is a text file, use [http://docs.oracle.com/javase/7/docs/api/java/nio/file/Files.html#probeContentType%28java.nio.file.Path%29 probeContentType] to get the MIME type. Then use string functions to check if the first word of the MIME type is "text". We should probably also look for "multipart/mixed" and "multipart/alternative", since these are usually at least part text and should diff fine.
+
+Finally, check that the file isn't too large. At the time, it's unknown how large is "too large", so let's use the arbitrary number of 5 megabytes. Testing is necessary to figure out just how much is really "too large".
+
 == FileHistory ==
 Manages the revision history of files.
 
@@ -135,28 +147,43 @@ Takes in a path to a file in the backup directory and the time stamp of the desi
 Returns a path to a temporary file with the contents of the specified revision.
 
 == DbManager ==
-Simplifies working with the database by providing a series of functions to access and modify the database. There should be only one at a time,, and static. It's essentially a wrapper class for accessing the database.
+Simplifies working with the database by providing a series of functions to access and modify the database. There should be only one at a time,, and static. It's essentially a wrapper class for accessing the database. Returns the result set output by the database driver for select functions. *ALL* DbManager functions _must_ set a lock before doing anything, and check the value of the lock before trying to do anything. If the lock is still active, wait a milisecond (?). Be sure to remove the lock when the function ends _or_ if an exception occurs!
 
-{{{
-	.
-		NEEDS IMMEDIATE DISCUSSION
-	.
-}}}
+=== Create database and tables ===
+This is used for the first time the program is run, as the database must be created and the table structure defined. The tables should be empty. If the tables cannot be created for some reason, throw an exception: there's no getting this program to work.
+
+=== Get revision data ===
+Takes in a path and runs a simple select operation to get all rows that contain that path (in other words, all revisions of that file). The result set of rows is returned.
+
+=== Get a specific revision ===
+Takes in a path and a time stamp, and runs a select operation that get the row that contain the path and have the matching time stamp.
+
+=== Insert a revision ===
+Takes in a path (to the file that the revision belongs to), a string containing the diff content, and the difference in bytes the diff introduced. The time stamp should be then calculated (seconds since unix epoch) and the row should be stored in the table with an insert operation.
+
+=== Change revision names ===
+Takes in a revision path for the new name and a path for the old name. Searches for rows that match the old name and updates the rows to have the new name as the path.
+
+=== Get configuration setting ===
+Takes in a string corresponding to the setting name. Searches the configuration table for that name, and returns the string value. Throw an exception if there is no such row.
+
+=== Set configuration setting ===
+Takes in a string corresponding to the setting name and another to its value. Checks if the row with the corresponding setting already exist. If so, update that row. If not, insert a new row.
 
 == Data ==
 The Data component queries the DbManager to get the info that the GUI needs.
 
 === Get folder contents ===
-Takes in a path and returns an array list of FileInfo objects (which is yet another plain old data class that groups information). The FileInfo objects store: folder (a boolean value that is true if the item is a folder and false if it's a regular file), fileSize (in bytes), lastAccessedDate, lastModifiedDate, createdDate, numberOfRevisions, revisionSizes, and fileName.
+Takes in a path and returns a list of FileInfo objects (which is yet another plain old data class that groups information). The FileInfo objects store: folder (a boolean value that is true if the item is a folder and false if it's a regular file), fileSize (in bytes), lastAccessedDate, lastModifiedDate, createdDate, numberOfRevisions, revisionSizes, and fileName.
 
 It actually takes quite a bit of work to calculate the information such as the number of revisions and revision size, which require cycling through all revisions of a file.
 
-The array list should be ordered with all folders listed alphabetically first, followed by all regular files listed alphabetically.
+The list should be ordered with all folders listed alphabetically first, followed by all regular files listed alphabetically.
 
 Note that folders do not have a file size or revisions.
 
 === Get revision info ===
-Similar to the above section, it takes in a path and returns an array list of RevisionInfo objects (more PoD). The RevisionInfo object stores the time stamp, size of the revision (in bytes), and the delta (change in filesize). All that data is stored in the database, so it's simply a matter of retrieval and restructuring.
+Similar to the above section, it takes in a path and returns the result set from the database query.
 
 == FrontEnd ==
 The FrontEnd is the GUI of the program. It performs no computation and depends on the Data component to get the information to display and the Control component to perform operations for it.
@@ -178,6 +205,21 @@ Also on the main window should be two buttons: up a folder and refresh. Up a fol
 Beside those buttons is a text field containing the current path. It should display the path relative to the backup directory. For now, the text field should be disabled, so the program can change its contents (and should update that whenever we go up a folder or go into a folder) without the user being able to. In the future, we may allow this to be edited so the user can type a path manually.
 
 The GUI should not cause the program to terminate when the window is closed. Rather, closing the window should create an icon in the system tray. Clicking this icon should recreate the GUI window.
+
+=== Time parsing ===
+In the database, time stamps are stored in unix time: integer number of seconds since the unix epoch (1970-01-01 00:00:00 UTC). For ease of use, when displaying time and date values to the user, they should be displayed in [http://en.wikipedia.org/wiki/ISO_8601 ISO 8601 format]. For example, `1:51:11 PM on 24 September 2013` would be displayed as `2013-09-24 13:51:11`.
+
+Displaying the date in this format ensures that it is possible to sort the rows by date in the GUI. Care should be taken that all single digit numbers are padded with a zero (for example, September is `09`, not simply `9`).
+
+=== File size parsing ===
+Likewise, file sizes (and the "delta", or difference in file sizes) are stored in bytes, which are not very human readable for larger files. Thus, for display in the GUI, all file sizes should be converted into a human readable format with units such as KB (kilobytes). In this context, prefixes refer to powers of 2. For example, a KB is 2^10 (1024), not 10^3 (1000). The conversions should be as follows:
+
+  * For numbers below 1024 bytes, just display the number of bytes.
+  * For numbers between 1 KB and 1024 KB, display the number of kilobytes.
+  * For numbers between 1 MB and 1 GB, display the number of megabytes.
+  * For numbers greater than or equal to 1 GB, just display the number of gigabytes (it's unknown if the program would even be able to handle files larger than a few gigabytes).
+
+When division takes place, round to 2 digits. So a file that has 5000 bytes has 5000 / 1024 = 4.8828125 KB, which rounds to 4.88 KB.
 
 == The database ==
 The database has two tables, one for the revisions and one for the settings (configuration).
@@ -244,7 +286,7 @@ Create the system tray icon that will draw the GUI when clicked.
   * Control copies file from backup directory into live directory.
 
 {{{
-	This section needs to be expanded. Help yourself.
+  >> This section needs to be expanded. Help yourself. <<
 }}}
 
 == Notes ==
@@ -253,6 +295,7 @@ Create the system tray icon that will draw the GUI when clicked.
   * The program has the limitation in that JNotify only noticed changes while the program is running. It will not notice changes that were made when the program was not running. To counter this, we should iterate through all files in the live directory, comparing their CRCs with the backups, and making revisions when necessary. This only has to be done each time the program is started. For the mean time, this is a reasonable limitation.
   * The program currently does not facilitate changing the live or backup directories. Changing either directory would be best done with the presumption that the old backup will no longer match the correct live directory. Thus, we could simply delete the database file to make the program think the program is on its first run.
   * All components should make heavy use of the logger (using the [https://logging.apache.org/log4j/1.2/manual.html log4j library]). All log messages should have appropriate levels set (eg, info, warning, error) so that we can easily toggle between the level of verbosity we need (presumably the final program will only log errors and maybe warnings).
+  * This is not a concrete guide. For example, feel free to implement helper functions where you feel necessary. Changes to the input or output of a function, however, need to be discussed. What's important is that the function works, not how it works.
 
 == See also ==
   * [https://code.google.com/p/fbms/wiki/EarlyProjectProposal Early Project Proposal]
