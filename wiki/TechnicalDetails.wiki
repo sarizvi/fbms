@@ -1,8 +1,6 @@
 #labels Phase-Requirements,Phase-Implementation
 This page details the workings of FBMS in great detail.
 
-<wiki:toc max_depth="1" />
-
 == Overview ==
 FBMS is an automated backup and revision program. The user specifies a folder that they want to keep backed up (the "live directory") and the location to store the backup (the "backup directory"). The program automatically searches the live directory for changes in intervals, and copies changes to the backup directory. Revisions are automatically created by creating diff ("patch") files for every change.
 
@@ -84,8 +82,11 @@ Once the diff is created, it's stored with FileHistory (akin to when a file is m
 
 The revision temporary file should then be deleted.
 
-==== Recover most recent version ====
-This occurs when the user selects a revision for a file and chooses to recover the most recent version. It uses the FileOp component to copy the file from the backup directory into the live directory.
+==== Restore all backup files ====
+This occurs when the user chooses to restore everything from the file menu of the FrontEnd's menu bar. It recurses through the backup folder and uses FileHistory to copy all the files to the corresponding location in the live directory.
+
+==== Copy-to ====
+This occurs when the user chooses the copy-to option from the file menu of the FrontEnd's menu bar. It takes in a source file and destination path, then calls FileOp's copy function to copy the file.
 
 == FileOp ==
 The FileOp component is an object which can perform some operations on files. Meant to be used as a static object, so we can simply call `FileOp.copy("foo", "bar")`.
@@ -194,9 +195,11 @@ It should use the Data component to get the contents of the current working dire
 
 Double clicking a file, on the other hand, opens up a window which displays the available revisions (also obtained from the Data component), if any. On this window, there should be four buttons: view revision, view changes, revert to revision, and recover most recent all which call the corresponding Control functions.
 
-On the main window, the top of the window has a status bar. The file menu will have options that are currently in limbo (such as reverting all files to a certain time, cleaning out older revisions, etc). In the mean time, it should provide a "View revisions" option (same as double clicking a file), an exit option, and a copy-to option.
+On the main window, the top of the window has a status bar. The file menu will have options that are currently in limbo (such as reverting all files to a certain time, cleaning out older revisions, etc). In the mean time, it should provide a "View revisions" option (same as double clicking a file), a copy-to option, a restore all option, and an exit option.
 
-The copy-to option open a save dialogue for the current selected file, allowing the user to save a copy of the file in another location. The default folder should be the live directory. Note that both copy-to and view revisions need a file to be selected, and should be greyed out if a file is not selected (including when a folder is selected).
+The restore-all option should first prompt the user for confirmation. After confirmation, uses the Control to copy the entire backup directory to the live directory, overwriting when necessary.
+
+The copy-to option open a save dialogue for the current selected file, allowing the user to save a copy of the file in another location. The default folder should be the live directory. The source file and destination folder are then passed to Control to perform the copy. Note that both copy-to and view revisions need a file to be selected, and should be greyed out if a file is not selected (including when a folder is selected).
 
 The help menu will have an option for opening the web documentation (to-do in the future).
 
@@ -205,6 +208,8 @@ Also on the main window should be two buttons: up a folder and refresh. Up a fol
 Beside those buttons is a text field containing the current path. It should display the path relative to the backup directory. For now, the text field should be disabled, so the program can change its contents (and should update that whenever we go up a folder or go into a folder) without the user being able to. In the future, we may allow this to be edited so the user can type a path manually.
 
 The GUI should not cause the program to terminate when the window is closed. Rather, closing the window should create an icon in the system tray. Clicking this icon should recreate the GUI window.
+
+The exit option in the file menu, however, should bring up a prompt asking the user if they're sure they want to close the program, and warning them that closing the program will prevent changes from being backed up. It should have three buttons: "Close the program" (commits suicide), "Minimize the program to the taskbar" (just closes the JFrame), and "Cancel" (does nothing).
 
 === Time parsing ===
 In the database, time stamps are stored in unix time: integer number of seconds since the unix epoch (1970-01-01 00:00:00 UTC). For ease of use, when displaying time and date values to the user, they should be displayed in [http://en.wikipedia.org/wiki/ISO_8601 ISO 8601 format]. For example, `1:51:11 PM on 24 September 2013` would be displayed as `2013-09-24 13:51:11`.
@@ -254,13 +259,29 @@ Create the threaded loop that will check for changes in the watched array lists.
 Create the system tray icon that will draw the GUI when clicked.
 
 == Use cases ==
-=== User edits a file ===
-  * Watcher notices the file has been modified and places it in the modified files array list.
+=== User edits a (text) file ===
+  * Watcher notices the file has been modified and places it in the modified files list.
   * Control, on its interval, notices the modified files list is not empty.
-  * Control makes a diff using FileOp
-  * Control inserts the diff into the database using FileHistory
-  * Control copies the file to the backup using FileOp
+  * Control notices the file is a small text file by using FileOp.
+  * Control makes a diff using FileOp.
+  * Control tells FileHistory to insert the diff into the revision table.
+  * FileHistory tells DbManager to insert a row with the revision information.
+  * Control copies the file to the backup using FileOp.
   * Control empties the modified files array list for the next iteration before sleeping its thread for a short period of time (when the next iteration begins).
+
+=== User edits a (binary) file ===
+  * Watcher notices the file has been modified and places it in the modified files list.
+  * Control, on its interval, notices the modified files list is not empty.
+  * Control notices the file is not a small text file by using FileOp
+  * Control copies the file to the backup using FileOp.
+  * Control empties the modified files array list for the next iteration before sleeping its thread for a short period of time (when the next iteration begins).
+
+=== User renames a file ===
+  * Watcher notices the file has been renamed and places it in the renamed files list.
+  * Control, on its interval, notices the renamed files list is not empty.
+  * Control tells FileHistory to rename the revisions of the renamed file.
+  * FileHistory tells DbManager to update the rows for new names.
+  * Control empties the renamed files array list for the next iteration before sleeping its thread for a short period of time (when the next iteration begins).
 
 === User wants to revert a file ===
   * User opens FrontEnd by clicking the program's icon in the system tray.
@@ -285,9 +306,13 @@ Create the system tray icon that will draw the GUI when clicked.
   * FrontEnd tells Control the file name.
   * Control copies file from backup directory into live directory.
 
-{{{
-  >> This section needs to be expanded. Help yourself. <<
-}}}
+=== User wants to restore the entire backup ===
+  * User opens FrontEnd by clicking the program's icon in the system tray.
+  * FrontEnd populates the window with information about folders and files in the backup directory, which it obtained from the Data component.
+  * The user goes to the file menu of the menu bar and choses the "restore backup" option.
+  * FrontEnd opens prompt to ask the user for confirmation.
+  * If the user confirmed the action, the FrontEnd tells the Control to restore the backup.
+  * Control iterates through all files in the backup folder, using FileOp to copy each one to appropriate subfolder(s) in the live directory (FileOp's copy automatically creates folders as necessary).
 
 == Notes ==
   * The time to sleep on an interval has not been determined, but since SQLite stores time with an accuracy of a second, we should probably sleep for at least one second. Testing will hopefully find an optimal value.
