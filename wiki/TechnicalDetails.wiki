@@ -148,13 +148,13 @@ Takes in a path to a file in the backup directory and the time stamp of the desi
 Returns a path to a temporary file with the contents of the specified revision.
 
 == DbManager ==
-Simplifies working with the database by providing a series of functions to access and modify the database. There should be only one at a time,, and static. It's essentially a wrapper class for accessing the database. Returns the result set output by the database driver for select functions. *ALL* DbManager functions _must_ set a lock before doing anything, and check the value of the lock before trying to do anything. If the lock is still active, wait a milisecond (?). Be sure to remove the lock when the function ends _or_ if an exception occurs!
+Simplifies working with the database by providing a series of functions to access and modify the database. There should be only one at a time,, and static. It's essentially a wrapper class for accessing the database. Returns the lists created from the result set output by the database driver for select functions. *ALL* DbManager functions _must_ set a lock before doing anything, and check the value of the lock before trying to do anything. If the lock is still active, wait a milisecond (?). Be sure to remove the lock when the function ends _or_ if an exception occurs!
 
 === Create database and tables ===
 This is used for the first time the program is run, as the database must be created and the table structure defined. The tables should be empty. If the tables cannot be created for some reason, throw an exception: there's no getting this program to work.
 
 === Get revision data ===
-Takes in a path and runs a simple select operation to get all rows that contain that path (in other words, all revisions of that file). The result set of rows is returned.
+Takes in a path and runs a simple select operation to get all rows that contain that path (in other words, all revisions of that file). The result set of rows is copied into a list of RevisionInfo objects.
 
 === Get a specific revision ===
 Takes in a path and a time stamp, and runs a select operation that get the row that contain the path and have the matching time stamp.
@@ -184,7 +184,7 @@ The list should be ordered with all folders listed alphabetically first, followe
 Note that folders do not have a file size or revisions.
 
 === Get revision info ===
-Similar to the above section, it takes in a path and returns the result set from the database query.
+Similar to the above section, it takes in a path and copies the result set from the database query into a list of RevisionInfo objects.
 
 == FrontEnd ==
 The FrontEnd is the GUI of the program. It performs no computation and depends on the Data component to get the information to display and the Control component to perform operations for it.
