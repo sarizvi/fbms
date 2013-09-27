@@ -38,7 +38,9 @@ If the file doesn't already exist, the Control simply tells FileOp to copy the f
 ==== Modified files ====
 For modified files, the Control uses FileOp to check if the file is a text file of under 5 MB (?). This is necessary because binary files files do not make efficient diffs. Testing will be necessary to determine what file size limit works best.
 
-For valid text and small files, the Control uses FileOp to create a diff for the file, comparing the version in the live folder with the one in the backup folder. The diff content is then passed into FileHistory, which stores the revision in the database.
+Control must first check if there exists such a file in the backup directory already, as it's possible for a file to be flagged as modified without being created. If the file does not already exist in the backup dir, don't create a diff: just copy it over.
+
+Otherwise, for valid text and small files, the Control uses FileOp to create a diff for the file, comparing the version in the live folder with the one in the backup folder. The diff content is then passed into FileHistory, which stores the revision in the database.
 
 For all kinds of files, FileOp copies the files to the backup directory.
 
