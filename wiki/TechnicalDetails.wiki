@@ -31,6 +31,8 @@ The Control uses the lists which the Watcher has populated. In a separate thread
 ==== Created files ====
 For the files in the created files list, the control must first determine if the file already exists in the backup directory. If it does, this means that a new file has been created and has overwritten an older file. If this is the case, we must treat the "creation" as though it were simply a modification. Thus, we remove that file from the created list and put it in the modified list.
 
+Control also has to check if the "file" is a folder with FileOp. Folders are not revised the same way, but rather the copy function automatically creates folders as necessary. Thus, if it's a folder, ignore the file.
+
 If the file doesn't already exist, the Control simply tells FileOp to copy the files to the backup directory.
 
 ==== Modified files ====
@@ -42,6 +44,8 @@ For all kinds of files, FileOp copies the files to the backup directory.
 
 ==== Renamed files ====
 For renamed files, the Control uses FileHistory to rename the file name in the database table (changing instances of the old name to the new name). Then FileOp is used check if a file of the new name already exists in the backup directory. If so, delete that. Either way, use FileOp to rename the old file to the new name.
+
+If the renamed "file" is actually a folder (FileOp can detect if it's a folder), things get a bit more complicated. Folders should be renamed with FileOp and then FileHistory is used to rename a folder in the revision database.
 
 You'll notice that if there was a conflict, we only deleted the conflicting file and not its history. This effectively merged the history of the two files, since file history is dependent only on the file's path.
 
@@ -117,6 +121,8 @@ Simply takes in an old path and a new name. Finds the file that matches the old 
 
 The function first checks if a file of the new name already exists in the directory that the old file is in. If so, we delete that first. Finally, the function renames the old file to the new name.
 
+It may also be necessary to use a different technique to rename folders. If that is the case, the path should be checked with FileOp to check if it's a folder.
+
 === Delete a file ===
 Simplifies the deletion of a file by taking in a path and deleting the file located at that path.
 
@@ -133,6 +139,9 @@ To determine if a file is a text file, use [http://docs.oracle.com/javase/7/docs
 
 Finally, check that the file isn't too large. At the time, it's unknown how large is "too large", so let's use the arbitrary number of 5 megabytes. Testing is necessary to figure out just how much is really "too large".
 
+=== Check if a "file" is a folder ===
+JNotify detects not just file changes, but folder changes (creation, renaming, and deletion). Because folders have to be handled differently by the Control, it is necessary to be able to detect if a path is a folder. This returns true if a given path is a folder and false if it's a regular file.
+
 == FileHistory ==
 Manages the revision history of files.
 
@@ -146,6 +155,9 @@ Takes in a path to a temporary diff file, a path to the actual file, file size o
 Takes in a path to a file in the backup directory and the time stamp of the desired revision. The file is copied into a temporary file. Then uses the DbManager to get the database entries up to (and including) the desired revision. With each entry, the FileOp component is used to apply the diff. The new temporary file created by FileOp is then used to apply the next diff, all the way until we get to the diff with the time stamp desired.
 
 Returns a path to a temporary file with the contents of the specified revision.
+
+=== Rename revision ===
+Takes in two paths: the old name and new name. Searches for a specific path (the old name) and replaces occurrences with the new name in the database.
 
 == DbManager ==
 Simplifies working with the database by providing a series of functions to access and modify the database. There should be only one at a time,, and static. It's essentially a wrapper class for accessing the database. Returns the lists created from the result set output by the database driver for select functions. *ALL* DbManager functions _must_ set a lock before doing anything, and check the value of the lock before trying to do anything. If the lock is still active, wait a milisecond (?). Be sure to remove the lock when the function ends _or_ if an exception occurs!
