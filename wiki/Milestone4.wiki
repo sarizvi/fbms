@@ -253,14 +253,15 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 		-
 	Michael:
 		-
- * Note: Times are estimates, research time not included
+ * Note: Times are estimates. Note included is research time, time used
+   by meetings, class time, etc.
 </pre>
 
   * *Need hours you've spent on project so far, broken up into components*. Please post this here. *<---  <---*
   * Run into any need for changes? Areas where you may need more or less time? Post it here.
   * Mike will put this part together just before submission
   
-=FINISH 1, 2, 3, 8, AND 10 BEFORE 15 OCTOBER 23:59:59=
+=FINISH 1, 2, 3, 8, AND 10 BEFORE THE END OF 15 OCTOBER=
   * 4, 5, 7 require UML modelling tools, so will have to be discussed. Anyone have ideas of programs to use? If possible, we should try and use the same program for consistency
   * 9 and rest of 10 will be completed shortly before submission is due. They're best put off till last minute so we can fit as much work as possible into them
   * For readability, I'll add page breaks between each numbered section in the final PDF format. I'll also try making headers more visible and adding borders
