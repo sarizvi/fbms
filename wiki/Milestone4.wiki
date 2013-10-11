@@ -228,6 +228,34 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 ==10 - Project Plan==
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
+*Hours spent on project:*
+<pre>
+	Mike:
+		- Planning and documentation:   5 hours
+		- Work on previous milestones:  5 hours
+		- Utility demo:                 8 hours
+		- Skeleton implemention and
+		  PoD classes:                  2 hours
+		- Watcher class:                1 hour
+		- DbManager.init():             3 hours
+		- FirstRunWizard class:         6 hours
+		- Data.getFolderContents():     2 hours
+		- Various Control code related
+		  to startup:                   5 hours
+		- JUnit testing code:           2 hours
+		- Errors class:                 3 hours
+		            Approximate total: 42 hours
+	Da:
+		-
+	Ahsen:
+		-
+	Hattan:
+		-
+	Michael:
+		-
+ * Note: Times are estimates, research time not included
+</pre>
+
   * *Need hours you've spent on project so far, broken up into components*. Please post this here. *<---  <---*
   * Run into any need for changes? Areas where you may need more or less time? Post it here.
   * Mike will put this part together just before submission
