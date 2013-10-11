@@ -7,73 +7,107 @@
   * Michael Butler - mdb815
 
 ==1 - Summary use cases==
-===Name===
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+===Change backup folder===
 ====Level====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Summary
 
 ====Actors====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+User
 
 ====Goal====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+To allow the user to select a new location to store their backed up files.
 
 ====Activities====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The user chooses an option from a menu in the front end GUI. This opens a prompt to select a new directory location for the backup directory. Choosing a new location asks for confirmation. If the user confirms the action, the file that specifies the location of the backup directory is changed. The contents of the previous backup folder are then copied to the new location. The user is then prompted if they wish to delete the old backup location.
 
 ====Quality====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+This aspect of the program is of very low priority, due to the fact that the program does not require this functionality to work. However, due to the fact that bugs here could cause a loss of all backed up data, it is a requirement that this functionality be stable. Therefore, it will likely be put off until last, and implemented only if time allows.
 
 ====Version====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+11 October 2013
 
+===First run===
+====Level====
+Summary
+
+====Actors====
+User
+
+====Goal====
+To setup the live and backup directories on the first time the program is run
+
+====Activities====
+The program determines if it is the first run by checking for the existence of the file which specifies the backup directory. If this file is not found or the backup directory is invalid, it is considered to be the first run. A GUI wizard is shown, and the user is asked if they wish to specify a new backup or if they wish to import an old backup. To create a new backup, the user is prompted for paths for a live and backup directory (which cannot be children of one or the other). To import an old backup, the user is prompted to provide a path to the backup folder (which contains a database file). If the user enters invalid paths, they will be prompted to enter a new one. The wizard also allows the user to go back and change previously made choices. On the final screen of the wizard, the program initializes the backup and live directories and creates the database connection.
+
+====Quality====
+This aspect of the program is top priority, as it is mandatory for the program to be used at all. Therefore, it must be completely stable and well designed. In fact, this portion of the program is already complete in our prototype, as will be demonstrated in section 9.
+
+====Version====
+11 October 2013
+
+----
   * 10 of these in total
   * Da: Create file; Rename file
   * Ahsen: Delete file; Create folder
   * Hattan: Rename folder; View revision
   * Michael: Revert file to revision; Change live folder
-  * Mike: Change backup folder; First run
+  * Mike: Change backup folder; First run -- done
   * See RUP_Inception slide 18 for an example
+----
 
 ==2 - Fully dressed use cases==
-===Name===
+===First run===
 ====Scope====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Program is run for the first time
 
 ====Level====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+User goal
 
 ====Primary Actor====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+User
 
 ====Stakeholders and interests====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+User: Setup the program with the directories it will act on.
 
 ====Preconditions====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+It is the program's first run or the program cannot startup normally.
 
 ====Success Guarantee====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The backup and live directories are configured to valid paths.
 
 ====Main Success scenario====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  * Program determines that it is the first run because the file pointing to the backup location is missing, or the backup location is otherwise invalid (non-existent folder or missing necessary database file inside this folder).
+  * A GUI wizard is displayed, with buttons for navigating and exiting the wizard.
+  * The wizard prompts the user as to whether they wish to create a new backup or import an existing backup.
+    * If a new backup is chosen, the user is prompted to provide paths for both the live and backup directories (via file choosers).
+    * If the user chooses to import an existing backup, they are prompted to provide a path to this backup directory.
+  * The wizard finalizes, telling the user that setup was completed.
+  * The program establishes a connection with the database, setting it up in the specified backup directory by creating the file that points to the backup directory.
 
 ====Extensions====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  * The user cannot specify live and backup directories that are children or parents of each other.
+    * This prevents infinite recursion. If the backup folder was inside the live directory, every backup would be identified as a change to the live directory (and thus need to be backed up as well). If the live directory was inside the backup directory, then we run the risk of backed up files overwriting files in the live directory.
+    * The program will issue an error dialog if this occurs, and will not allow the user to continue until they specify valid directories.
+  * When importing an existing backup, the chosen directory must contain a database file which indicates that the directory has been used for backup before.
+    * This file contains the path of the live directory, which is necessary for the program to import an existing backup.
+    * The program will issue an error dialog if this occurs, and will not allow the user to continue until they specify a valid directory.
+  * If the user closes the dialog window, it will do nothing unless they are on the final panel of the wizard, which indicates a success.
 
 ====Special Requirements====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  * The program directory and the chosen live and backup directories _must_ have write access.
 
 ====Technology and Data Variations List====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  * The program flow changes based on whether the user chose to import an existing backup or start a new one. If they chose to import an existing backup, the live directory is set when the program initializes the database. If they started a new backup, the wizard sets the live directory.
 
 ====Frequency of Occurrence====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  * Exactly once when the program starts for the first time
+  * May also occur if an error is encountered when the program starts up (such as if the backup directory is invalid)
 
+----
   * 5 of these in total
   * Choose one of the summary cases you used in (1)
-  * See RUP_Inception slides 19-22 for details and an example
+  * See larman-ch6-applying-evolutionary-use-cases.pdf in Dropbox for details and an example
+----
 
 ==3 - Supplementary specification==
   * See RUP_Inception slides 33-44 for details and examples
@@ -95,11 +129,14 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
   * User benefits, etc
 
 ===Third party components===
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+The project uses third party components for several areas, allowing the project to be completed in a reasonable span of time, as well as assisting in functionality beyond our current skills. Currently, we use:
 
-  * Done by Mike
-  * Components, libraries, databases, file interactions
-  * Why?
+  * *JNotify*: This library is used to detect changes in the live directory. It is capable of running event handlers when file changes occur. This allows us to efficiently find the changes in the directory. JNotify binds with the operating system (in which it supports all the major operating systems), allowing it to function similar to an interrupt-style listener. The program will then use a polling system to perform file operations on changes that occurred since the last poll. This makes spotting changes fast while minimizing file operations (which often occur in multiples even if the operation appeared atomic to the user).
+  * *Log4j*: The well known logging library is used to making logging efficient and configurable. Most importantly, it allows us to set levels to our logging. When the logging is set to DEBUG, the logging system is very verbose. This is useful when we need to know exactly what the program is doing, but for general usage, this slows the program down and floods the logs with irrelevant information. Normally, the user will have the logging set to either WARN or ERROR, which will limit the logging to things that are of actual use to the user.
+  * *Java-diff-utils*: This library is used to generate diff files, which is what our revisioning system is based on. The library is also used to apply the files, restoring the originals. To restore files several revisions old, the diff files are chained together, restoring revisions until we get to the one we want.
+  * *SQLite*: We use the SQLite JDBC driver to allow our databases to be well organized into an efficient, minimal file.
+
+These components integrate with our program and were chosen with efficiency in mind.
   
 ===Supportability===
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -126,16 +163,18 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
   * UML class diagram
 
 ==6 - Glossary==
-  * *Live directory*:
-  * *Backup directory*:
-  * *Revision*:
-  * *Diff*:
-  * *Revision database*:
-  * *Front end*:
-  * *Watcher*:
-  * *Control*:
-  * *File operations*:
-  * *Error alerts*:
+  * *Live directory*: The directory that the program monitors for changes. In other words, the directory that is being backed up.
+  * *Backup directory*: The directory where the backed up files and revisions from the live directory are placed.
+  * *Revision*: A snapshot of a file at a given time.
+  * *Diff*: Data that details what changed from one revision of a file to another. Also called a _patch_.
+  * *Revision database*: The database where revisions are stored as diff files.
+  * *Front end*: The visible portions of the program, including the main GUI window, the toolbar icon, and dialogs.
+  * *Watcher*: The program component that watches the live directory for changes. It operates concurrently from the rest of the program.
+  * *Control*: The heart of the program that performs setup and acts on the files that the watcher flags as "changed".
+  * *File operations*: Operations that change a file's content, name, or location. This includes operations such as file creation, renaming, moving, or deletion.
+  * *Error alerts*: GUI dialogs that alert the user to an error. They are split into two branches:
+     * *Fatal alerts*: Obtrusive dialogs that indicate that the program cannot proceed.
+     * *Non-fatal alerts*: Non-obtrusive dialogs that appear in the bottom right corner of the screen and automatically disappear after some time. These indicate something has gone wrong and cannot be recovered, but do not halt the progress of the program. For example, a file that cannot be backed up (perhaps due to permission issues).
 
 ==7 - System Sequence Diagram==
   * One by each group member
@@ -144,19 +183,37 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
   * Need to decide on program to use to create UML model, so TBD(?)
 
 ==8 - Operation Contracts==
-===Name===
+===Change backup folder===
 ====Cross references====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  * Copy file operation
+  * Delete file operation
+  * Set configuration database operation
 
 ====Pre-conditions====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  * None
 
 ====Post-conditions====
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  * The backup directory is changed, both in the program and in the file that stores the backup directory's location
+  * If the user agreed to it, the contents of the previous backup directory were copied to the new directory
+  * If the user agreed to it, the old backup directory is deleted
 
+===First run===
+====Cross references====
+  * Initialize database operation
+  * Set configuration database operation
+
+====Pre-conditions====
+  * None
+
+====Post-conditions====
+  * The live and backup directory locations are set
+  * The database file is created if this is a new backup
+
+----
   * 10 of these in total
   * Each group member makes 2 using the use cases they used in (1)
   * See RUP_Elaboration slides 44-50 for details and an example
+----
   
 ==9 - Implementation==
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -171,11 +228,11 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 ==10 - Project Plan==
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-  * *Need hours you've spent on project so far, broken up into components*. Please post this here.
+  * *Need hours you've spent on project so far, broken up into components*. Please post this here. *<---  <---*
   * Run into any need for changes? Areas where you may need more or less time? Post it here.
   * Mike will put this part together just before submission
   
 =FINISH 1, 2, 3, 8, AND 10 BEFORE 15 OCTOBER 23:59:59=
   * 4, 5, 7 require UML modelling tools, so will have to be discussed. Anyone have ideas of programs to use? If possible, we should try and use the same program for consistency
   * 9 and rest of 10 will be completed shortly before submission is due. They're best put off till last minute so we can fit as much work as possible into them
-  * For readability, I'll add page breaks between each numbered section in the final PDF format
+  * For readability, I'll add page breaks between each numbered section in the final PDF format. I'll also try making headers more visible and adding borders
