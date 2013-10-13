@@ -58,9 +58,9 @@ Add the file created by user to the system and backup it.
 ====Activities====
 The system receives a file created notice from the watcher module. 
 
-  a)a file with the same name and the same location has been existed in the system's record
-      Since there has been the "same" file existing, the system will first add a record, stating this special situation. The system will keep the pervious backups, but do not make a diff file in this case. The system will copy the newly created file into the backup folder. 
-  b)no file with the same name and the same location has been existed in the system's record
+  a)a file with the same name and the same location has been existed in the system
+      Since there has been the "same" file existing, the system will first add a record, stating this special situation. The system will keep the previous backups, but do not make a diff file in this case. The system will copy the newly created file into the backup folder. 
+  b)no file with the same name and the same location has been existed in the system
       The system just simply copies the file into the backup folder. Then a new record will be added in database stating a new file added.
 
 ====Quality====
