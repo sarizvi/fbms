@@ -89,7 +89,7 @@ This is a main use case in the system and must work to a very high standard.
 13 October 2013
 ----
   * 10 of these in total
-  * Da: Create file -- done; Rename file -- done
+  * Da: Create file; Rename file -- done
   * Ahsen: Delete file; Create folder
   * Hattan: Rename folder; View revision
   * Michael: Revert file to revision; Change live folder
@@ -144,6 +144,50 @@ The backup and live directories are configured to valid paths.
 ====Frequency of Occurrence====
   * Exactly once when the program starts for the first time
   * May also occur if an error is encountered when the program starts up (such as if the backup directory is invalid)
+
+===Create file===
+====Scope====
+FBMS
+
+====Level====
+System goal
+
+====Primary Actor====
+User
+
+====Stakeholders and interests====
+User: Want this new created file is automatically backuped.
+
+====Preconditions====
+The Watcher module is running normally.
+There is enough space in backup folder.
+System has read access to the newly created file.
+System has write access to backup folder.
+
+====Success Guarantee====
+The newly created file is backuped.
+Records are added in database.
+The history of this file is accessible from GUI.
+
+
+====Main Success scenario====
+  * Program determines whether a file with the same name and location has been existed in the system.
+    * If it exists, system adds a special record indicating a file with the same name and location is created. Then the system renames the previous file backup, to prevent  overwriting.
+    * If not, system goes to next step straightly.
+  * System copies the newly created file into backup folder.
+  * System establishes a connection with the database, inserting a new record into the database.
+
+====Extensions====
+  * The file will be locked when being copied to backup folder.
+
+====Special Requirements====
+  * Privilege is possible required.
+
+====Technology and Data Variations List====
+  * The program flow changes based on whether a file with the same name and location has been existed in the system. If it exists, system will do additional steps to ensure no overwriting occurs. If not, system will do it in regular way.
+
+====Frequency of Occurrence====
+  * Every time a new file is created in live folder
 
 ----
   * 5 of these in total
