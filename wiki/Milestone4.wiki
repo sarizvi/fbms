@@ -302,7 +302,13 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 ----
   
 ==9 - Implementation==
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Our prototype includes the first run use case as well as unused implementations of several other functions, which don't yet hook into the program. The program will startup, run the first run wizard, and then sit in the background with the file listener monitoring files. It won't yet do anything with the changed files, however.
+
+So far, Mike has setup the skeleton implementation, the Watcher class, the init function of the DbManager class, the first run wizard, the getFolderContents function of the Data class, the Error class, and the startup methods of the Control class. Michael has done the getConfig and setConfig classes of the DbManager class. Da has done the delete and filesize methods of the FileOp class.
+
+To build the project, extract the contents of the project's zip file. In Eclipse, choose File > Import and under General, choose to import an existing project into the workspace, choosing the directory you extracted the project's files into (should contain a `.project` file). From here, Eclipse can run the program. The project currently requires Eclipse Juno and JUnit 4. Final versions of the project will be setup for distribution so that Eclipse is not needed.
+
+---
 
   * Details of prototype
   * Purpose, who did what, etc
@@ -310,11 +316,66 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
   * Details of usage, compiling, etc
   * Mike will put this together, but implementation of at least something by everyone is needed
   * Focus on FileOp stuff and Control handling the lists of changed files; FileHistory and DbManager can wait
+  
+---
 
 ==10 - Project Plan==
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Implementation has found the need for new methods and approaches, such as how we now store the revisions database in the backup folder instead of in the program folder. This example created a bit more work, but keeps the backup all in one place. Similarly, the first run wizard now allows the user to import an existing backup.
 
-*Hours spent on project:*
+The assigned tasks and time estimates are otherwise unchanged from milestone 3 (with the done functionality removed from these lists):
+<pre>
+                                 Estimated time req
+MIKE:                                 (in hours)
+    Control.displayRevision()             3
+    Control.displayRevisionChanges()      3
+    Control.revertRevision()              4
+    DbManager.getRevisionData()           3
+                                         ---
+                                 Total:  13
+
+MICHAEL:
+    Control.handleCreatedFiles()          4
+    Control.handleModifiedFiles()         4
+    Control.handleRenamedFiles()          4
+    Control.HandleDeletedFiles()          4
+    DbManager.renameFile()                3
+                                         ---
+                                 Total:  18
+
+DA:
+    FileHistory.getRevision()             3
+    FileHistory.obtainRevision()          6
+    FileHistory.storeRevision()           3
+    FileOp.rename()                       2
+    FileOp.copy() (both)                  4
+    FileOp.fileValid()                    3
+                                         ---
+                                 Total:  21
+
+
+HATTAN:
+    Control.restoreBackup()               4
+    FileOp.createDiff()                   5
+    FileOp.applyDiff()                    5
+    FileOp.fileToList()                   3
+    FileOp.isFolder()                     3
+    Data.getRevisionInfo()                3
+    DbManager.insertRevision()            3
+                                         ---
+                                 Total:  26
+
+
+SYED:
+    FrontEnd.*                           20
+    FileHistory.renameRevision()          3
+                                         ---
+                                 Total:  23
+
+--------------------------------------------
+                           Grand total: 126
+</pre>
+
+The hours that have been spent so far on the project are:
 <pre>
 	Mike:
 		- Planning and documentation:   5 hours
@@ -330,7 +391,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 		  to startup:                   5 hours
 		- JUnit testing code:           2 hours
 		- Errors class:                 3 hours
-		            Approximate total: 42 hours
+		                        Total: 42 hours
 	Da:
 		-
 	Ahsen:
@@ -343,9 +404,11 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
    by meetings, class time, etc.
 </pre>
 
+---
   * *Need hours you've spent on project so far, broken up into components*. Please post this here. *<---  <---*
   * Run into any need for changes? Areas where you may need more or less time? Post it here.
   * Mike will put this part together just before submission
+---
   
 =FINISH 1, 2, 3, 8, AND 10 BEFORE THE END OF 15 OCTOBER=
   * 4, 5, 7 require UML modelling tools, so will have to be discussed. Anyone have ideas of programs to use? If possible, we should try and use the same program for consistency
