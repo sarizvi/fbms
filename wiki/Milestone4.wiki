@@ -147,27 +147,27 @@ The backup and live directories are configured to valid paths.
 
 ===Create file===
 ====Scope====
-FBMS
+  * FBMS
 
 ====Level====
-System goal
+  * System goal
 
 ====Primary Actor====
-User
+  * User
 
 ====Stakeholders and interests====
-User: Want this new created file is automatically backuped.
+  * User: Want this new created file is automatically backuped.
 
 ====Preconditions====
-The Watcher module is running normally.
-There is enough space in backup folder.
-System has read access to the newly created file.
-System has write access to backup folder.
+  * The Watcher module is running normally.
+  * There is enough space in backup folder.
+  * System has read access to the newly created file.
+  * System has write access to backup folder.
 
 ====Success Guarantee====
-The newly created file is backuped.
-Records are added in database.
-The history of this file is accessible from GUI.
+  * The newly created file is backuped.
+  * Records are added in database.
+  * The history of this file is accessible from GUI.
 
 
 ====Main Success scenario====
@@ -226,25 +226,25 @@ These components integrate with our program and were chosen with efficiency in m
   
 ===Supportability===
 
-==OS Compatibility==
+====OS Compatibility====
 
-Different OS organizes files in different ways. For Unix-like OS (Mac OS X and Linux), files and folders are in a single tree root; for Windows, first there are many roots(drives), then the roots have their own trees.
+  * Different OS organizes files in different ways. For Unix-like OS (Mac OS X and Linux), files and folders are in a single tree root; for Windows, first there are many roots(drives), then the roots have their own trees.
 
-Since that, it is necessary to declare the OS type in configuration.
+  * Since that, it is necessary to declare the OS type in configuration.
 
-Besides, the separator differs. Unix use "/", while Windows use "\". Fortunately, Java provides a method to retrieve the separator used. It should not be a problem.
+  * Besides, the separator differs. Unix use "/", while Windows use "\". Fortunately, Java provides a method to retrieve the separator used. It should not be a problem.
 
-==Network Drives==
+====Network Drives====
 
-All OS mentioned have the ability to mount network drive.
-_TBD_
+  * This feature will be implemented as a plug-in.
 
-==Configuration==
+====Configuration====
 
-  * Done by Da
-  * Different OSes, how the program adapts to this
-  * Drive locations, network drives
-  * Configuration, choosing folder locations, changing and importing backup locations
+  * The configuration will be stored as plain text, in the folder of program. 
+  * The locations of live and backup folder could be changed. 
+    * A change in live folder will cause a factory reset.
+  * Importing is easy. Just select the previous backup folder, and the system will take care of the rest.
+    * A backup of database will be stored in backup folder for a backup. 
   
 ===Reliability===
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
