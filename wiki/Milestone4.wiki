@@ -89,7 +89,7 @@ This is a main use case in the system and must work to a very high standard.
 13 October 2013
 
 
-====Rename folder====
+===Rename folder===
 ====Level====
 Summary
 ====Actors====
