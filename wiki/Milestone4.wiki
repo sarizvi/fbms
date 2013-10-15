@@ -371,7 +371,34 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
   * The live and backup directory locations are set
   * The database file is created if this is a new backup
 
+===Create File===
+====Cross references====
+  * Insert new record into database
+  * Rename file if necessary
 
+====Pre-conditions====
+  * Backup folder exists and has enough space.
+
+====Post-conditions====
+  * The newly created file is backed.
+    * Previous backup will be renamed if the backup has the same name and locations as the newly created one.
+
+===Rename File===
+====Cross references====
+  * Insert a rename record into database
+  * Change file name in previous records
+  * Change previous backups' name.
+
+====Pre-conditions====
+  * A file is renamed.
+  * Backup folder exists.
+  * Backups of the file renamed exist.
+  * Records of the file exists in database.
+
+====Post-conditions====
+  * A file rename record is inserted into database.
+  * All file names of the records of the file renamed are changed.
+  * All backups' name of the records of the file renamed are changed.
 
 ===Rename folder===
 ====Cross references====
@@ -493,7 +520,11 @@ The hours that have been spent so far on the project are:
 		- Errors class:                 3 hours
 		                        Total: 42 hours
 	Da:
-		-
+		- Rough design of modules:      1 hour
+		- Rough design of functions:    1 hour
+		- Work on previous milestones:  4 hours
+		- Programming(so far):          3 hours
+                                       Total:  9 hours
 	Ahsen:
 		-
 	Hattan:
