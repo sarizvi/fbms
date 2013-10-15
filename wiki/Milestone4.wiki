@@ -87,11 +87,43 @@ This is a main use case in the system and must work to a very high standard.
 
 ====Version====
 13 October 2013
+
+
+====Rename folder====
+====Level====
+Summary
+====Actors====
+user
+====Goal====
+To rename a backup folder to a new name.
+====Activities====
+The user specifies whatever folder he/she wants to rename it and then give it a new name. The system checks if  the new name is already exist, then the user will be notified to choose another one, otherwise the folder name will be changed.
+
+====Quality====
+This is a main use case in the system and must work to a very high standard.
+====Version====
+14 October 2013
+
+
+====View revision====
+====Level=====
+Summary
+====Actors====
+User
+====Goal====
+To show or display a selected revision of a file.
+====Activities====
+The user select a whatever file he/she wants to view a specific revision for that file. With a selected file, the user is presented a list of revisions and options, which include view revision.
+====Quality====
+This is a main use case in the system and must work to a very high standard.
+====Version====
+14 October 2013
+
 ----
   * 10 of these in total
   * Da: Create file; Rename file -- done
   * Ahsen: Delete file; Create folder
-  * Hattan: Rename folder; View revision
+  * Hattan: Rename folder; View revision -- done
   * Michael: Revert file to revision; Change live folder
   * Mike: Change backup folder; First run -- done
   * See RUP_Inception slide 18 for an example
