@@ -105,7 +105,7 @@ This is a main use case in the system and must work to a very high standard.
 14 October 2013
 
 
-====View revision====
+===View Revision===
 ====Level=====
 Summary
 ====Actors====
@@ -220,6 +220,36 @@ The backup and live directories are configured to valid paths.
 
 ====Frequency of Occurrence====
   * Every time a new file is created in live folder
+
+
+===Rename Folder===
+
+====Scope====
+FBMS
+====Level====
+User goal
+====Primary Actor====
+User
+====Stakeholders and interests====
+User: Want this folder to be renamed.
+====Preconditions====
+The Watcher module is running normally. There is no similar folder name. 
+====Success Guarantee====
+The folder has renamed to a new name. The new folder history is added in database. The history of this folder is accessible from GUI.
+====Main Success scenario====
+•	The user wants to rename a specific folder.
+•	Program determines whether the folder’s name has been changed in the system or the new name exists.
+◦	If it is exist, ask the user for another name
+◦	If not, system goes to next step straightly.
+====Extensions====
+•	The folder will be renamed, and it’s files will remain with no changes.
+====Special Requirements====
+•	No same folder’s name is exist.
+====Technology and Data Variations List====
+•	The system determines whether the folder with the new name and location has been existed in the system or not to ensure no overwriting occurs.
+====Frequency of Occurrence====
+Each time a folder’s name is changed
+
 
 ----
   * 5 of these in total
@@ -340,6 +370,30 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 ====Post-conditions====
   * The live and backup directory locations are set
   * The database file is created if this is a new backup
+
+
+
+===Rename folder===
+====Cross references====
+•	Copy files operation
+•	Delete files operation
+•	Change backup folder
+====Pre-conditions====
+•	None
+====Post-conditions====
+•	The folder name is changed.
+•	The files in the folder remain the same.
+
+===View revision===
+====Cross references====
+•	Display the file history
+•	Revert the revision
+====Pre-conditions====
+•	File should be selected.
+====Post-conditions====
+•	The revision of a selected file is shown using GUI.
+
+
 
 ----
   * 10 of these in total
