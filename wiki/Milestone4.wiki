@@ -58,10 +58,8 @@ Add the file created by user to the system and backup it.
 ====Activities====
 The system receives a file created notice from the watcher module. 
 
-  a)a file with the same name and the same location has been existed in the system
-      Since there has been the "same" file existing, the system will first add a record, stating this special situation. The system will keep the previous backups, but do not make a diff file in this case. The system will copy the newly created file into the backup folder. 
-  b)no file with the same name and the same location has been existed in the system
-      The system just simply copies the file into the backup folder. Then a new record will be added in database stating a new file added.
+  # A file with the same name and the same location has been existed in the system: Since there has been the "same" file existing, the system will first add a record, stating this special situation. The system will keep the previous backups, but do not make a diff file in this case. The system will copy the newly created file into the backup folder. 
+  # No file with the same name and the same location has been existed in the system: The system just simply copies the file into the backup folder. Then a new record will be added in database stating a new file added.
 
 ====Quality====
 This is a main use case in the system and must work to a very high standard.
@@ -88,34 +86,41 @@ This is a main use case in the system and must work to a very high standard.
 ====Version====
 13 October 2013
 
-
 ===Rename folder===
 ====Level====
 Summary
+
 ====Actors====
-user
+User
+
 ====Goal====
 To rename a backup folder to a new name.
+
 ====Activities====
 The user specifies whatever folder he/she wants to rename it and then give it a new name. The system checks if  the new name is already exist, then the user will be notified to choose another one, otherwise the folder name will be changed.
 
 ====Quality====
 This is a main use case in the system and must work to a very high standard.
+
 ====Version====
 14 October 2013
-
 
 ===View Revision===
 ====Level=====
 Summary
+
 ====Actors====
 User
+
 ====Goal====
 To show or display a selected revision of a file.
+
 ====Activities====
 The user select a whatever file he/she wants to view a specific revision for that file. With a selected file, the user is presented a list of revisions and options, which include view revision.
+
 ====Quality====
 This is a main use case in the system and must work to a very high standard.
+
 ====Version====
 14 October 2013
 
@@ -132,22 +137,22 @@ This is a main use case in the system and must work to a very high standard.
 ==2 - Fully dressed use cases==
 ===First run===
 ====Scope====
-Program is run for the first time
+  * Program is run for the first time
 
 ====Level====
-User goal
+  * User goal
 
 ====Primary Actor====
-User
+  * User
 
 ====Stakeholders and interests====
-User: Setup the program with the directories it will act on.
+  * User: Setup the program with the directories it will act on.
 
 ====Preconditions====
-It is the program's first run or the program cannot startup normally.
+  * It is the program's first run or the program cannot startup normally.
 
 ====Success Guarantee====
-The backup and live directories are configured to valid paths.
+  * The backup and live directories are configured to valid paths.
 
 ====Main Success scenario====
   * Program determines that it is the first run because the file pointing to the backup location is missing, or the backup location is otherwise invalid (non-existent folder or missing necessary database file inside this folder).
@@ -188,7 +193,7 @@ The backup and live directories are configured to valid paths.
   * User
 
 ====Stakeholders and interests====
-  * User: Want this new created file is automatically backuped.
+  * User: Want this new created file is automatically backed up.
 
 ====Preconditions====
   * The Watcher module is running normally.
@@ -197,14 +202,13 @@ The backup and live directories are configured to valid paths.
   * System has write access to backup folder.
 
 ====Success Guarantee====
-  * The newly created file is backuped.
+  * The newly created file is backed up.
   * Records are added in database.
   * The history of this file is accessible from GUI.
 
-
 ====Main Success scenario====
   * Program determines whether a file with the same name and location has been existed in the system.
-    * If it exists, system adds a special record indicating a file with the same name and location is created. Then the system renames the previous file backup, to prevent  overwriting.
+    * If it exists, system adds a special record indicating a file with the same name and location is created. Then the system renames the previous file backup, to prevent overwriting.
     * If not, system goes to next step straightly.
   * System copies the newly created file into backup folder.
   * System establishes a connection with the database, inserting a new record into the database.
@@ -221,34 +225,42 @@ The backup and live directories are configured to valid paths.
 ====Frequency of Occurrence====
   * Every time a new file is created in live folder
 
-
 ===Rename Folder===
-
 ====Scope====
-FBMS
+  * FBMS
+
 ====Level====
-User goal
+  * User goal
+
 ====Primary Actor====
-User
+  * User
+
 ====Stakeholders and interests====
-User: Want this folder to be renamed.
+  * User: Want this folder to be renamed.
+
 ====Preconditions====
-The Watcher module is running normally. There is no similar folder name. 
+  * The Watcher module is running normally. There is no similar folder name.
+
 ====Success Guarantee====
-The folder has renamed to a new name. The new folder history is added in database. The history of this folder is accessible from GUI.
+  * The folder has renamed to a new name. The new folder history is added in database. The history of this folder is accessible from GUI.
+
 ====Main Success scenario====
-•	The user wants to rename a specific folder.
-•	Program determines whether the folder’s name has been changed in the system or the new name exists.
-◦	If it is exist, ask the user for another name
-◦	If not, system goes to next step straightly.
+  * The user wants to rename a specific folder.
+  * Program determines whether the folder’s name has been changed in the system or the new name exists.
+  * If it is exist, ask the user for another name
+  * If not, system goes to next step straightly.
+
 ====Extensions====
-•	The folder will be renamed, and it’s files will remain with no changes.
+  * The folder will be renamed, and it’s files will remain with no changes.
+
 ====Special Requirements====
-•	No same folder’s name is exist.
+  * No same folder’s name is exist.
+
 ====Technology and Data Variations List====
-•	The system determines whether the folder with the new name and location has been existed in the system or not to ensure no overwriting occurs.
+  * The system determines whether the folder with the new name and location has been existed in the system or not to ensure no overwriting occurs.
+
 ====Frequency of Occurrence====
-Each time a folder’s name is changed
+  * Each time a folder’s name is changed
 
 
 ----
@@ -258,9 +270,12 @@ Each time a folder’s name is changed
 ----
 
 ==3 - Supplementary specification==
+
+---
   * See RUP_Inception slides 33-44 for details and examples
   * Not concrete; feel free to change your assigned concept for something else if you feel that would be easier
-  
+---  
+
 ===Interfaces===
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
@@ -289,19 +304,15 @@ These components integrate with our program and were chosen with efficiency in m
 ===Supportability===
 
 ====OS Compatibility====
-
   * Different OS organizes files in different ways. For Unix-like OS (Mac OS X and Linux), files and folders are in a single tree root; for Windows, first there are many roots(drives), then the roots have their own trees.
-
   * Since that, it is necessary to declare the OS type in configuration.
-
-  * Besides, the separator differs. Unix use "/", while Windows use "\". Fortunately, Java provides a method to retrieve the separator used. It should not be a problem.
+  * Besides, the separator differs. Unix use "/", while Windows use "\". Fortunately, Java provides a method to retrieve the separator used. Windows also works with the forward slash.
 
 ====Network Drives====
-
-  * This feature will be implemented as a plug-in.
+  * Supported provided the location of the drive is consistent (eg, same mount location or drive letter).
+  * No reliable means of creating links when the location of a drive is inconsistent.
 
 ====Configuration====
-
   * The configuration will be stored as plain text, in the folder of program. 
   * The locations of live and backup folder could be changed. 
     * A change in live folder will cause a factory reset.
@@ -402,25 +413,27 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
 
 ===Rename folder===
 ====Cross references====
-•	Copy files operation
-•	Delete files operation
-•	Change backup folder
+  * Copy files operation
+  * Delete files operation
+  * Change backup folder
+
 ====Pre-conditions====
-•	None
+  * None
+
 ====Post-conditions====
-•	The folder name is changed.
-•	The files in the folder remain the same.
+  * The folder name is changed.
+  * The files in the folder remain the same.
 
 ===View revision===
 ====Cross references====
-•	Display the file history
-•	Revert the revision
+  * Display the file history
+  * Revert the revision
+
 ====Pre-conditions====
-•	File should be selected.
+  * File should be selected.
+
 ====Post-conditions====
-•	The revision of a selected file is shown using GUI.
-
-
+  * The revision of a selected file is shown using GUI.
 
 ----
   * 10 of these in total
@@ -541,7 +554,7 @@ The hours that have been spent so far on the project are:
   * Mike will put this part together just before submission
 ---
   
-=FINISH 1, 2, 3, 8, AND 10 BEFORE THE END OF 15 OCTOBER=
-  * 4, 5, 7 require UML modelling tools, so will have to be discussed. Anyone have ideas of programs to use? If possible, we should try and use the same program for consistency
+=FINISH 1, 2, 3, 8, AND 10 ASAP=
+  * 4, 5, 7 require UML modelling tools, UMLet --> http://www.umlet.com/
   * 9 and rest of 10 will be completed shortly before submission is due. They're best put off till last minute so we can fit as much work as possible into them
   * For readability, I'll add page breaks between each numbered section in the final PDF format. I'll also try making headers more visible and adding borders
