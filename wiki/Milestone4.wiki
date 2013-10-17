@@ -124,7 +124,7 @@ This is a main use case in the system and must work to a very high standard.
 ====Version====
 14 October 2013
 
-===elete file===
+===Delete file===
 
 ====Level====
 summary
