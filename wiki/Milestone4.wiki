@@ -58,8 +58,8 @@ Add the file created by user to the system and backup it.
 ====Activities====
 The system receives a file created notice from the watcher module. 
 
-  # A file with the same name and the same location has been existed in the system: Since there has been the "same" file existing, the system will first add a record, stating this special situation. The system will keep the previous backups, but do not make a diff file in this case. The system will copy the newly created file into the backup folder. 
-  # No file with the same name and the same location has been existed in the system: The system just simply copies the file into the backup folder. Then a new record will be added in database stating a new file added.
+   A file with the same name and the same location has been existed in the system: Since there has been the "same" file existing, the system will first add a record, stating this special situation. The system will keep the previous backups, but do not make a diff file in this case. The system will copy the newly created file into the backup folder. 
+   No file with the same name and the same location has been existed in the system: The system just simply copies the file into the backup folder. Then a new record will be added in database stating a new file added.
 
 ====Quality====
 This is a main use case in the system and must work to a very high standard.
@@ -124,6 +124,46 @@ This is a main use case in the system and must work to a very high standard.
 ====Version====
 14 October 2013
 
+===elete file===
+
+====Level====
+summary
+
+====actor====
+System
+
+====Goal====
+Allows the user to delete a specified file
+
+====Activities==== 
+User scrolls over live directory and finds the file to be deleted.
+jnotify notices the file change and calls the watcher.
+the watcher notices a file has been deleted from the live directory and add to the list.
+the control reads the list and removes any other instances of the file in the other list.
+
+====Quality====
+This is a main use case in the system and must work to a very high standard. 
+
+====version====
+17th October
+
+===Create Folder===
+====level==== 
+summary
+
+====actor====
+ System
+
+====Goal====
+ Allows the user to create a file 
+
+====Activities====
+ when a file is created the watcher notices the change
+control checks if  the folder is present. If the folder is already present in the list there is no change. 
+Quality:This is a main use case in the system and must work to a very high standard. 
+
+====version====
+17th October
 ----
   * 10 of these in total
   * Da: Create file; Rename file -- done
@@ -132,6 +172,10 @@ This is a main use case in the system and must work to a very high standard.
   * Michael: Revert file to revision; Change live folder
   * Mike: Change backup folder; First run -- done
   * See RUP_Inception slide 18 for an example
+
+
+
+
 ----
 
 ==2 - Fully dressed use cases==
@@ -181,6 +225,44 @@ This is a main use case in the system and must work to a very high standard.
 ====Frequency of Occurrence====
   * Exactly once when the program starts for the first time
   * May also occur if an error is encountered when the program starts up (such as if the backup directory is invalid)
+
+
+===delete file===
+====Scope====
+  * FBMS
+ 
+====Level====
+  * Sub function
+ 
+====Primary Actor====
+  * User
+ 
+====Stakeholders and interests====
+  * User: Wants to delete a file present in the live directory.
+ 
+====Preconditions====
+  * none
+
+====Success Guarantee====
+  * Nothing has changed
+
+====Main Success scenario====
+  * The user deletes a file outside the system.
+  * jNotify notices the file change and calls the watcher.
+  * The watcher notices a file has been deleted from the live directory and add to the list.
+  * The control reads the list and removes any other instances of the file in the other lists.
+
+====Extensions====
+  * none.
+
+====Special Requirements====
+  * none.
+
+====Technology and Data Variations List====
+  * none.
+
+====Frequency of Occurrence====
+  * Every time a file is deleted from the live directory. 
 
 ===Create file===
 ====Scope====
