@@ -104,6 +104,8 @@ The second is more complicated and used for copying modified/created files. Reca
 
 Both copy functions must create any necessary folders and should overwrite the destination.
 
+The list based function can assume all paths are files, but the function that takes in a single path should check if the path is a folder. If so, create any necessary folders and call itself recursively on the contents of the folder.
+
 === Creating a diff ===
 FileOP can also create a diff of a file. The function uses the [https://code.google.com/p/java-diff-utils/ Java-diff-utils library] to create the diff as a temporary file (note: place temporary files in a subfolder of the application directory, as the system temp folder can sometimes be emptied by the OS at the wrong time). Returns a path to this temporary file.
 
