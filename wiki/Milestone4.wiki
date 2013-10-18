@@ -414,7 +414,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
   * To be decided
 
 ==5 - Domain Model==
-http://i.imgur.com/IMk5LGj.png
+http://i.imgur.com/Pwtayk4.png
 
 ==6 - Glossary==
   * *Live directory*: The directory that the program monitors for changes. In other words, the directory that is being backed up.
