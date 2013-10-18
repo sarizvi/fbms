@@ -411,7 +411,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
   * Performance (file scanner, control does file ops at intervals, etc)
 
 ==4 - Use Case Diagram==
-  * To be decided
+  * Coming soon
 
 ==5 - Domain Model==
 http://i.imgur.com/Pwtayk4.png
@@ -431,10 +431,15 @@ http://i.imgur.com/Pwtayk4.png
      * *Non-fatal alerts*: Non-obtrusive dialogs that appear in the bottom right corner of the screen and automatically disappear after some time. These indicate something has gone wrong and cannot be recovered, but do not halt the progress of the program. For example, a file that cannot be backed up (perhaps due to permission issues).
 
 ==7 - System Sequence Diagram==
+===First run===
+http://i.imgur.com/71cpCum.png
+
+----
   * One by each group member
   * Use one of the use cases you used in (1)
   * UML Sequence diagram
-  * Need to decide on program to use to create UML model, so TBD(?)
+  * Use UMLet: http://www.umlet.com/umlet_12_1/umlet_12.1.zip
+----
 
 ==8 - Operation Contracts==
 ===Change backup folder===
@@ -529,7 +534,7 @@ So far, Mike has setup the skeleton implementation, the Watcher class, the init 
 
 To build the project, extract the contents of the project's zip file. In Eclipse, choose File > Import and under General, choose to import an existing project into the workspace, choosing the directory you extracted the project's files into (should contain a `.project` file). From here, Eclipse can run the program. The project currently requires Eclipse Juno and JUnit 4. Final versions of the project will be setup for distribution so that Eclipse is not needed.
 
----
+----
 
   * Details of prototype
   * Purpose, who did what, etc
@@ -538,7 +543,7 @@ To build the project, extract the contents of the project's zip file. In Eclipse
   * Mike will put this together, but implementation of at least something by everyone is needed
   * Focus on FileOp stuff and Control handling the lists of changed files; FileHistory and DbManager can wait
   
----
+----
 
 ==10 - Project Plan==
 Implementation has found the need for new methods and approaches, such as how we now store the revisions database in the backup folder instead of in the program folder. This example created a bit more work, but keeps the backup all in one place. Similarly, the first run wizard now allows the user to import an existing backup.
