@@ -411,7 +411,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
   * Performance (file scanner, control does file ops at intervals, etc)
 
 ==4 - Use Case Diagram==
-  * Coming soon
+http://i.imgur.com/QamQGSQ.png
 
 ==5 - Domain Model==
 http://i.imgur.com/Pwtayk4.png
