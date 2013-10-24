@@ -26,6 +26,7 @@ This aspect of the program is of very low priority, due to the fact that the pro
 ====Version====
 11 October 2013
 
+
 ===First run===
 ====Level====
 Summary
@@ -45,6 +46,7 @@ This aspect of the program is top priority, as it is mandatory for the program t
 ====Version====
 11 October 2013
 
+
 ===Create file===
 ====Level====
 Summary
@@ -58,14 +60,16 @@ Add the file created by user to the system and backup it.
 ====Activities====
 The system receives a file created notice from the watcher module. 
 
-   A file with the same name and the same location has been existed in the system: Since there has been the "same" file existing, the system will first add a record, stating this special situation. The system will keep the previous backups, but do not make a diff file in this case. The system will copy the newly created file into the backup folder. 
-   No file with the same name and the same location has been existed in the system: The system just simply copies the file into the backup folder. Then a new record will be added in database stating a new file added.
+A file with the same name and the same location has been existed in the system: Since there has been the "same" file existing, the system will first add a record, stating this special situation. The system will keep the previous backups, but do not make a diff file in this case. The system will copy the newly created file into the backup folder. 
+
+No file with the same name and the same location has been existed in the system: The system just simply copies the file into the backup folder. Then a new record will be added in database stating a new file added.
 
 ====Quality====
 This is a main use case in the system and must work to a very high standard.
 
 ====Version====
 13 October 2013
+
 
 ===Rename file===
 ====Level====
@@ -86,6 +90,7 @@ This is a main use case in the system and must work to a very high standard.
 ====Version====
 13 October 2013
 
+
 ===Rename folder===
 ====Level====
 Summary
@@ -104,6 +109,7 @@ This is a main use case in the system and must work to a very high standard.
 
 ====Version====
 14 October 2013
+
 
 ===View Revision===
 ====Level=====
@@ -124,58 +130,59 @@ This is a main use case in the system and must work to a very high standard.
 ====Version====
 14 October 2013
 
-===Delete file===
 
+===Delete file===
 ====Level====
 summary
 
-====actor====
+====Actor====
 System
 
 ====Goal====
 Allows the user to delete a specified file
 
 ====Activities==== 
-User scrolls over live directory and finds the file to be deleted.
-jnotify notices the file change and calls the watcher.
-the watcher notices a file has been deleted from the live directory and add to the list.
-the control reads the list and removes any other instances of the file in the other list.
+User scrolls over live directory and finds the file to be deleted. JNotify notices the file change and calls the watcher. The watcher notices a file has been deleted from the live directory and add to the list. The control reads the list and removes any other instances of the file in the other list.
 
 ====Quality====
 This is a main use case in the system and must work to a very high standard. 
 
-====version====
-17th October
+====Version====
+17 October 2013
+
 
 ===Create Folder===
-====level==== 
+====Level==== 
 summary
 
-====actor====
- System
+====Actor====
+System
 
 ====Goal====
- Allows the user to create a file 
+Allows the user to create a file 
 
 ====Activities====
- when a file is created the watcher notices the change
-control checks if  the folder is present. If the folder is already present in the list there is no change. 
-Quality:This is a main use case in the system and must work to a very high standard. 
+When a file is created the watcher notices the change. Control checks if  the folder is present. If the folder is already present in the list there is no change. 
 
-====version====
-17th October
+====Quality====
+This is a main use case in the system and must work to a very high standard. 
+
+====Version====
+17 October 2013
+
+
 ----
-  * 10 of these in total
-  * Da: Create file; Rename file -- done
-  * Ahsen: Delete file; Create folder
-  * Hattan: Rename folder; View revision -- done
-  * Michael: Revert file to revision; Change live folder
-  * Mike: Change backup folder; First run -- done
-  * See RUP_Inception slide 18 for an example
-
-
-
-
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
 ----
 
 ==2 - Fully dressed use cases==
@@ -227,7 +234,7 @@ Quality:This is a main use case in the system and must work to a very high stand
   * May also occur if an error is encountered when the program starts up (such as if the backup directory is invalid)
 
 
-===delete file===
+===Delete file===
 ====Scope====
   * FBMS
  
@@ -241,28 +248,29 @@ Quality:This is a main use case in the system and must work to a very high stand
   * User: Wants to delete a file present in the live directory.
  
 ====Preconditions====
-  * none
+  * None
 
 ====Success Guarantee====
   * Nothing has changed
 
 ====Main Success scenario====
   * The user deletes a file outside the system.
-  * jNotify notices the file change and calls the watcher.
+  * JNotify notices the file change and calls the watcher.
   * The watcher notices a file has been deleted from the live directory and add to the list.
   * The control reads the list and removes any other instances of the file in the other lists.
 
 ====Extensions====
-  * none.
+  * None
 
 ====Special Requirements====
-  * none.
+  * None
 
 ====Technology and Data Variations List====
-  * none.
+  * None
 
 ====Frequency of Occurrence====
   * Every time a file is deleted from the live directory. 
+
 
 ===Create file===
 ====Scope====
@@ -307,12 +315,13 @@ Quality:This is a main use case in the system and must work to a very high stand
 ====Frequency of Occurrence====
   * Every time a new file is created in live folder
 
+
 ===Rename Folder===
 ====Scope====
   * FBMS
 
 ====Level====
-  * User goal
+  * Subfunction
 
 ====Primary Actor====
   * User
@@ -324,7 +333,7 @@ Quality:This is a main use case in the system and must work to a very high stand
   * The Watcher module is running normally. There is no similar folder name.
 
 ====Success Guarantee====
-  * The folder has renamed to a new name. The new folder history is added in database. The history of this folder is accessible from GUI.
+  * The folder has renamed to a new name. The new folder history is added in database.
 
 ====Main Success scenario====
   * The user wants to rename a specific folder.
@@ -346,17 +355,20 @@ Quality:This is a main use case in the system and must work to a very high stand
 
 
 ----
-  * 5 of these in total
-  * Choose one of the summary cases you used in (1)
-  * See larman-ch6-applying-evolutionary-use-cases.pdf in Dropbox for details and an example
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
 ----
 
 ==3 - Supplementary specification==
-
----
-  * See RUP_Inception slides 33-44 for details and examples
-  * Not concrete; feel free to change your assigned concept for something else if you feel that would be easier
----  
 
 ===Interfaces===
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -384,7 +396,6 @@ The project uses third party components for several areas, allowing the project 
 These components integrate with our program and were chosen with efficiency in mind.
   
 ===Supportability===
-
 ====OS Compatibility====
   * Different OS organizes files in different ways. For Unix-like OS (Mac OS X and Linux), files and folders are in a single tree root; for Windows, first there are many roots(drives), then the roots have their own trees.
   * Since that, it is necessary to declare the OS type in configuration.
@@ -410,11 +421,56 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
   * Actions that have reliability issues, like copying files
   * Performance (file scanner, control does file ops at intervals, etc)
 
+
+----
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
+----
+
 ==4 - Use Case Diagram==
 http://i.imgur.com/QamQGSQ.png
 
+
+----
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
+----
+
 ==5 - Domain Model==
 http://i.imgur.com/Pwtayk4.png
+
+
+----
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
+----
 
 ==6 - Glossary==
   * *Live directory*: The directory that the program monitors for changes. In other words, the directory that is being backed up.
@@ -435,10 +491,22 @@ http://i.imgur.com/Pwtayk4.png
 http://i.imgur.com/71cpCum.png
 
 ----
-  * One by each group member
   * Use one of the use cases you used in (1)
-  * UML Sequence diagram
   * Use UMLet: http://www.umlet.com/umlet_12_1/umlet_12.1.zip
+----
+
+----
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
 ----
 
 ==8 - Operation Contracts==
@@ -456,6 +524,7 @@ http://i.imgur.com/71cpCum.png
   * If the user agreed to it, the contents of the previous backup directory were copied to the new directory
   * If the user agreed to it, the old backup directory is deleted
 
+
 ===First run===
 ====Cross references====
   * Initialize database operation
@@ -468,6 +537,7 @@ http://i.imgur.com/71cpCum.png
   * The live and backup directory locations are set
   * The database file is created if this is a new backup
 
+
 ===Create File===
 ====Cross references====
   * Insert new record into database
@@ -479,6 +549,7 @@ http://i.imgur.com/71cpCum.png
 ====Post-conditions====
   * The newly created file is backed.
     * Previous backup will be renamed if the backup has the same name and locations as the newly created one.
+
 
 ===Rename File===
 ====Cross references====
@@ -497,6 +568,7 @@ http://i.imgur.com/71cpCum.png
   * All file names of the records of the file renamed are changed.
   * All backups' name of the records of the file renamed are changed.
 
+
 ===Rename folder===
 ====Cross references====
   * Copy files operation
@@ -510,6 +582,7 @@ http://i.imgur.com/71cpCum.png
   * The folder name is changed.
   * The files in the folder remain the same.
 
+
 ===View revision===
 ====Cross references====
   * Display the file history
@@ -521,28 +594,41 @@ http://i.imgur.com/71cpCum.png
 ====Post-conditions====
   * The revision of a selected file is shown using GUI.
 
+
 ----
-  * 10 of these in total
-  * Each group member makes 2 using the use cases they used in (1)
-  * See RUP_Elaboration slides 44-50 for details and an example
+{{{
+	
+}}}
 ----
-  
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
+----
+
 ==9 - Implementation==
 Our prototype includes the first run use case as well as unused implementations of several other functions, which don't yet hook into the program. The program will startup, run the first run wizard, and then sit in the background with the file listener monitoring files. It won't yet do anything with the changed files, however.
 
 So far, Mike has setup the skeleton implementation, the Watcher class, the init function of the DbManager class, the first run wizard, the getFolderContents function of the Data class, the Error class, and the startup methods of the Control class. Michael has done the getConfig and setConfig classes of the DbManager class. Da has done the delete and filesize methods of the FileOp class.
 
-To build the project, extract the contents of the project's zip file. In Eclipse, choose File > Import and under General, choose to import an existing project into the workspace, choosing the directory you extracted the project's files into (should contain a `.project` file). From here, Eclipse can run the program. The project currently requires Eclipse Juno and JUnit 4. Final versions of the project will be setup for distribution so that Eclipse is not needed.
+To build the project, extract the contents of the project's zip file. In Eclipse, choose File > Import and under General, choose to import an existing project into the workspace, choosing the directory you extracted the project's files into (should contain a `.project` file). From here, Eclipse can run the program. The project currently requires Eclipse Juno and JUnit4. Final versions of the project will be setup for distribution so that Eclipse is not needed.
+
 
 ----
-
-  * Details of prototype
-  * Purpose, who did what, etc
-  * Skeleton implementation of other parts. Everyone needs to have implemented at least _some_ code by submission time
-  * Details of usage, compiling, etc
-  * Mike will put this together, but implementation of at least something by everyone is needed
-  * Focus on FileOp stuff and Control handling the lists of changed files; FileHistory and DbManager can wait
-  
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
 ----
 
 ==10 - Project Plan==
@@ -557,7 +643,7 @@ MIKE:                                 (in hours)
     Control.revertRevision()              4
     DbManager.getRevisionData()           3
                                          ---
-                                 Total:  13
+                             Remaining:  13
 
 MICHAEL:
     Control.handleCreatedFiles()          4
@@ -566,7 +652,7 @@ MICHAEL:
     Control.HandleDeletedFiles()          4
     DbManager.renameFile()                3
                                          ---
-                                 Total:  18
+                             Remaining:  18
 
 DA:
     FileHistory.getRevision()             3
@@ -576,7 +662,7 @@ DA:
     FileOp.copy() (both)                  4
     FileOp.fileValid()                    3
                                          ---
-                                 Total:  21
+                             Remaining:  21
 
 
 HATTAN:
@@ -588,14 +674,14 @@ HATTAN:
     Data.getRevisionInfo()                3
     DbManager.insertRevision()            3
                                          ---
-                                 Total:  26
+                             Remaining:  26
 
 
 SYED:
     FrontEnd.*                           20
     FileHistory.renameRevision()          3
                                          ---
-                                 Total:  23
+                             Remaining:  23
 
 --------------------------------------------
                            Grand total: 126
@@ -605,7 +691,7 @@ The hours that have been spent so far on the project are:
 <pre>
 	Mike:
 		- Planning and documentation:   5 hours
-		- Work on previous milestones:  5 hours
+		- Milestones:                   8 hours
 		- Utility demo:                 8 hours
 		- Skeleton implemention and
 		  PoD classes:                  2 hours
@@ -617,7 +703,7 @@ The hours that have been spent so far on the project are:
 		  to startup:                   5 hours
 		- JUnit testing code:           2 hours
 		- Errors class:                 3 hours
-		                        Total: 42 hours
+		                        Total: 45 hours
 	Da:
 		- Rough design of modules:      1 hour
 		- Rough design of functions:    1 hour
@@ -630,17 +716,6 @@ The hours that have been spent so far on the project are:
 		-
 	Michael:
 		-
- * Note: Times are estimates. Note included is research time, time used
+ * Note: Times are estimates. Not included is research time, time used
    by meetings, class time, etc.
 </pre>
-
----
-  * *Need hours you've spent on project so far, broken up into components*. Please post this here. *<---  <---*
-  * Run into any need for changes? Areas where you may need more or less time? Post it here.
-  * Mike will put this part together just before submission
----
-  
-=FINISH 1, 2, 3, 8, AND 10 ASAP=
-  * 4, 5, 7 require UML modelling tools, UMLet --> http://www.umlet.com/
-  * 9 and rest of 10 will be completed shortly before submission is due. They're best put off till last minute so we can fit as much work as possible into them
-  * For readability, I'll add page breaks between each numbered section in the final PDF format. I'll also try making headers more visible and adding borders
