@@ -612,7 +612,11 @@ http://i.imgur.com/71cpCum.png
 ==9 - Implementation==
 Our prototype includes the first run use case as well as unused implementations of several other functions, which don't yet hook into the program. The program will startup, run the first run wizard, and then sit in the background with the file listener monitoring files. It won't yet do anything with the changed files, however.
 
-So far, Mike has setup the skeleton implementation, the Watcher class, the init function of the DbManager class, the first run wizard, the getFolderContents function of the Data class, the Error class, and the startup methods of the Control class. Michael has done the getConfig and setConfig classes of the DbManager class. Da has done the delete and filesize methods of the FileOp class.
+So far:
+
+  * *Mike* has setup the skeleton implementation, the `Watcher` class, the `init()` function of the `DbManager` class, the first run wizard, the `getFolderContents()` function of the `Data` class, the `Error` class, and the startup methods of the `Control` class. 
+  * *Michael* has done the `getConfig()` and `setConfig()` classes of the `DbManager` class.
+  * *Da* has done the `delete()` and `filesize()` methods of the `FileOp` class.
 
 To build the project, extract the contents of the project's zip file. In Eclipse, choose File > Import and under General, choose to import an existing project into the workspace, choosing the directory you extracted the project's files into (should contain a `.project` file). From here, Eclipse can run the program. The project currently requires Eclipse Juno and JUnit4. Final versions of the project will be setup for distribution so that Eclipse is not needed.
 
@@ -632,7 +636,7 @@ To build the project, extract the contents of the project's zip file. In Eclipse
 ----
 
 ==10 - Project Plan==
-Implementation has found the need for new methods and approaches, such as how we now store the revisions database in the backup folder instead of in the program folder. This example created a bit more work, but keeps the backup all in one place. Similarly, the first run wizard now allows the user to import an existing backup.
+Implementation has found the need for new methods and approaches, such as how we now store the revisions database in the backup folder instead of in the program folder. This example created a bit more work, but keeps the backup all in one place. Similarly, the first run wizard now allows the user to import an existing backup, the program uses 64 bit integers when working with the database to prevent possible size mismatches, and the GUI is summoned and whisked away with a system tray icon.
 
 The assigned tasks and time estimates are otherwise unchanged from milestone 3 (with the done functionality removed from these lists):
 <pre>
@@ -682,10 +686,11 @@ SYED:
     FileHistory.renameRevision()          3
                                          ---
                              Remaining:  23
-
---------------------------------------------
-                           Grand total: 126
 </pre>
+
+The project is being created with a mixture of agile and concurrent engineering principles. Each group member works on individual components, but code reviews are committed on each person by two others, weekly "SCRUM-like" meetings allow us to discuss changes, difficulties, and overall progress. In general, however, we follow technical document <[https://code.google.com/p/fbms/wiki/TechnicalDetails https://code.google.com/p/fbms/wiki/TechnicalDetails]> that changes with our iterations and several other planning documents that are communicated via email. This allows us to keep our planning streamlined and up-to-date, while facilitating communication and ever-changing requirements.
+
+
 
 The hours that have been spent so far on the project are:
 <pre>
