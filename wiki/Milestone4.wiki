@@ -353,6 +353,46 @@ October 20th, 2013
 ====Frequency of Occurrence====
   * Every time a new file is created in live folder
 
+===Rename file <sup>(Tao)</sup>===
+====Scope====
+  * FBMS
+
+====Level====
+  * System goal
+
+====Primary Actor====
+  * User
+
+====Stakeholders and interests====
+  * User: Want this renamed file is automatically renamed in system.
+
+====Preconditions====
+  * The Watcher module is running normally.
+  * The reversion is accessible.
+  * System has read access to the newly created file.
+  * System has write access to backup folder.
+
+====Success Guarantee====
+  * The backups of file renamed are renamed.
+  * Records are renamed in database.
+
+====Main Success scenario====
+  * System is notified for the renaming operation.
+  * System renames all the backups of the file.
+  * System add a rename record into the database.
+  * System changes all the records of the file.
+
+====Extensions====
+  * The backups of file will be locked when being renamed.
+
+====Special Requirements====
+  * None.
+
+====Technology and Data Variations List====
+  * None.
+
+====Frequency of Occurrence====
+  * Every time a file is renamed in live folder
 
 ===Rename Folder <sup>(Alsharif)</sup>===
 ====Scope====
