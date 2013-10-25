@@ -1,4 +1,4 @@
-#labels Phase-Design,Phase-Implementation
+#labels Phase-Implementation
 =Milestone 4: Requirements and preliminary design=
   * Mike Hoffert - mlh374
   * Syed Ahsan Rizvi - sar457
@@ -170,6 +170,44 @@ This is a main use case in the system and must work to a very high standard.
 ====Version====
 17 October 2013
 
+
+===Revert File to Revision <sup>(Butler)</sup>===
+====Level====
+Summary
+
+====Actor====
+User
+
+====Goal====
+Ability to revert a file to a prior version.
+
+====Activities==== 
+The file selects a revision using the GUI. Backend then uses FileHistory and FileOp to revert the file in such a way as not to interfere with versioning. 
+
+====Quality====
+This part of the program is high priority, it is not critical to the backup functionality of the program but is necessary for the user to take advantage of the versioning information being created. To that end it is also a primary component to why a user would use our program. 
+
+====Version====
+October 20th, 2013
+
+===Change Live Folder <sup>(Butler)</sup>===
+====Level====
+Summary
+
+====Actor====
+User
+
+====Goal====
+Gives the program the ability to change where the current live data is being held. Changing the saved setting for the location and also moving all necessary content to the new location.
+
+====Activities==== 
+User specifies a new live folder location using the GUI. The GUI/frontend then calls control, which handles the rename, makes any necessary changes internally and moves necessary components to the new folder. Then cleans up any backup or temporary files.
+
+====Quality====
+Low priority part of the program. The system functions as specified without this being implemented. It however is a convenient for the user, and requires testing to avoid data loss.
+
+====Version====
+October 20th, 2013
 
 ----
 {{{
@@ -352,6 +390,54 @@ This is a main use case in the system and must work to a very high standard.
 
 ====Frequency of Occurrence====
   * Each time a folder’s name is changed
+
+
+===Revert File to Revision<sup>(Butler)</sup>===
+====Scope====
+  * FBMS general use.
+ 
+====Level====
+  * User goal
+ 
+====Primary Actor====
+  * User
+ 
+====Stakeholders and interests====
+  * User: Revert the selected file to the selected version.
+ 
+====Preconditions====
+  * System must be in a properly setup and running state. 
+  * A file must be selected by the user.
+  * The file must be within the folder listing that is currently being backed up.
+  * A version must be selected by the user.
+  * A version history must exist for the file.
+  * System has proper read/write access to the backup and the system file.
+
+====Success Guarantee====
+  * The selected file is reverted to the proper revision.
+  * The previous version that was overwritten still remains in backup as a version. 
+
+====Main Success scenario====
+  * User prompts the program via the GUI that they wish to make a file revision.
+  * The user selects the file in question and then selects the revision they desire from the selection.
+  * The system then goes through file history to find the proper diff file referenced by the database.
+  * Temporary files are made where appropriate.
+  * The diff file is used to create a reverted version of the specified file.
+  * The file specified is now reverted and in the proper location. 
+
+====Extensions====
+  * Only files within the specified backup environment will have versions stored to revert to.
+  * Nothing will happen if the user selects the file and revision and exits the dialogue or otherwise does not hit ‘Ok’. 
+  * If the function fails due to system level issues, like permission conflicts, the function ends and the user is notified.
+
+====Special Requirements====
+  * Require write/read access to the file being modified. 
+
+====Technology and Data Variations List====
+None
+
+====Frequency of Occurrence====
+  * Whenever specified by the user.
 
 
 ----
