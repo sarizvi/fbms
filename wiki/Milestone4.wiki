@@ -697,6 +697,33 @@ http://i.imgur.com/4IXzBNa.png
   * The revision of a selected file is shown using GUI.
 
 
+===Revert to File Revision <sup>(Butler)</sup>===
+====Cross references====
+  * FileHistory all but rename.
+  * Copy and Diff file operations in FileOp
+
+====Pre-conditions====
+  * A revision for the file must exist.
+  * Read/Write access currently is available.
+
+====Post-conditions====
+  * File is reverted to previous version.
+  * Version that was replaced is still maintained as a revision.
+
+
+===Change Live Directory <sup>(Butler)</sup>===
+====Cross references====
+  * DbManager for config changes.
+
+====Pre-conditions====
+  * New location must exist.
+  * Must have read/write access to that location.
+
+====Post-conditions====
+  * The live directory is set to the new location.
+  * System is running in the same condition it was before the change.
+
+
 ----
 {{{
 	
@@ -825,7 +852,7 @@ The hours that have been spent so far on the project are:
 	Hattan:
 		-
 	Michael:
-		- Milestones:                   4 hours
+	        - Milestones:                   4 hours
                 - getConfig():                  3 hours
                 - setConfig():                  3 hours
                 - handleCreatedFiles()          
