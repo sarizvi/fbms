@@ -729,7 +729,7 @@ http://i.imgur.com/rPLnksr.png
 ----
 ===Delete File <sup>(Rizvi)</sup>===
 ====Cross references====
-  * Deete Folder
+  * Delete Folder
 
 ====Pre-conditions====
   * User deletes a file
