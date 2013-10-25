@@ -592,7 +592,7 @@ http://i.imgur.com/71cpCum.png
 ===Revert to File Revision <sup>(Butler)</sup>===
 http://i.imgur.com/4IXzBNa.png
 
-===Delete File
+===Delete File <sup>(Rizvi)</sup>===
 http://i.imgur.com/rPLnksr.png
 ----
   * Use one of the use cases you used in (1)
