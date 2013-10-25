@@ -727,13 +727,27 @@ http://i.imgur.com/rPLnksr.png
 
 
 ----
-{{{
-	
-}}}
+===Delete File <sup>(Rizvi)</sup>===
+====Cross references====
+  * Deete Folder
+
+====Pre-conditions====
+  * User deletes a file
+
+====Post-conditions====
+  * revisions are renamed
+  
 ----
-{{{
-	
-}}}
+===Create Folder <sup>(Rizvi)</sup>===
+====Cross references====
+  * Copy function
+
+====Pre-conditions====
+  * User creates a folder 
+
+====Post-conditions====
+  * none
+
 ----
 {{{
 	
@@ -849,8 +863,13 @@ The hours that have been spent so far on the project are:
 		- Milestone 4(graph)(WIP):      1 hours
 		- Test case:                    4 hours         
                                       Total:  18 hours
-	Ahsen:
-		-
+	Ahsen:  
+		-Milestone 4 (documentation):   5 hours
+                -Frontend implementation:       4 hours
+                -System Tray implementation:
+                -GUI design:
+
+                                      Total:    9 hours
 	Hattan:
 		-
 	Michael:
