@@ -457,21 +457,23 @@ None
 ==3 - Supplementary specification==
 
 ===Interfaces <sup>(Rizvi)</sup>===
-Interface:
-The interface consists of the GUI windowing system along with a minimizer tray icon. Closing the GUI minimizes the application to an icon in the system tray. This means that the application does not end simply by pressing the “x” button on the GUI but needs to be shut down from the system tray icon which has an “exit” option for closing the application entirely. The main GUI window comprises of a table, a Toolbar, a Menubar:
+
+The interface consists of the GUI windowing system along with a minimizer tray icon. Closing the GUI minimizes the application to an icon in the system tray. This means that the application does not end simply by pressing the “x” button on the GUI but needs to be shut down from the system tray icon which has an “exit” option for closing the application entirely. We have tried to make the main GUI as simple as possible so that an average user could be able to handle the software. It comprises of a few simple areas namely a table, a Toolbar and a Menubar:
 
 Table: This is used to contain a live directory of the back up files and folders. This directory is specified by the user and shows detailed entries of the names of the files or the folder, the sizes, the modified and the created dates as well as the last date it was accessed on and finally the revision size and the number of current revisions. Interactive features of the table include a Scrollbar, which the user can use to scroll up and down the list, single selection feature, allowing the user to select a single file at a time.
-When a folder is selected the table refreshes the contents of the list by genereating the contents of the folder. Selecting a file opens up a dialog box with information of the file revisions.
+When a folder is selected the table refreshes the contents of the list by generating the contents of the folder. Selecting a file opens up a dialog box with information of the file revisions. Errors are to be handled by the means of dialog boxes with “OK” and “cancel” buttons. Clicking one of these buttons
+closes the dialog.
 
-Toolbar: This is located above the table and contains two buttons and a text field. One of the button is an up button enabling the user to navigate out of the current folder. However the button is disabled if the user is already in the backup directory. The second button is the refresh button which refreshes the directory to the latest version. The text field which is set to contain the current path of the directory/
+Toolbar: This is located above the table and contains two buttons and a text field. One of the button is an up button enabling the user to navigate out of the current folder. However the button is disabled if the user is already in the backup directory. The second button is the refresh button which refreshes the directory to the latest version. The text field is set to contain the current path of the directory and is also disabled if the user is already in the back up directory.
 
 Menubar: At the very top is a menubar which consists of a file and a help item. The file item expands to options of:
 View revisions: It works in the same was a doubeclicking a file ie. Opens the revision dialog box. If no files are selected, do nothing.
 Copy-to: creates a dialog for selecting the folder to copy the selected file to.  Like review revisions, this cannot be done if no file is selected. 
-Restore all: prompts the user (with a JOptionPane) if they're sure they want to continue. Upon approval, the directory is restored to the previious revision.
+Restore all: prompts the user (with a JOptionPane) if they're sure they want to continue. Upon approval, the directory is restored to the previous revision.
 Exit: closes the GUI window. However it can be brought back by clicking on the icon in the system tray.
-The help menu has a single option to display the online help. This opens a webpage in the users default browser.
+The help menu has a single option to display the online help. This opens the website for the software in the users default browser.
 
+ 
 ===Vision <sup>(Butler)</sup>===
 FBMS is a multiplatform, self-contained automated backup and revision program. It does not require cloud services or any online access to function. It uses local resources and ideally secondary drive locations to backup critical data.
 
