@@ -592,6 +592,8 @@ http://i.imgur.com/71cpCum.png
 ===Revert to File Revision <sup>(Butler)</sup>===
 http://i.imgur.com/4IXzBNa.png
 
+===Delete File
+http://i.imgur.com/rPLnksr.png
 ----
   * Use one of the use cases you used in (1)
   * Use UMLet: http://www.umlet.com/umlet_12_1/umlet_12.1.zip
