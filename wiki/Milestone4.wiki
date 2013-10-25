@@ -589,6 +589,9 @@ http://i.imgur.com/bwbqnym.png
 ===First run <sup>(Hoffert)</sup>===
 http://i.imgur.com/71cpCum.png
 
+===Revert to File Revision <sup>(Butler)</sup>===
+http://i.imgur.com/4IXzBNa.png
+
 ----
   * Use one of the use cases you used in (1)
   * Use UMLet: http://www.umlet.com/umlet_12_1/umlet_12.1.zip
@@ -822,7 +825,17 @@ The hours that have been spent so far on the project are:
 	Hattan:
 		-
 	Michael:
-		-
+		- Milestones:                   4 hours
+                - getConfig():                  3 hours
+                - setConfig():                  3 hours
+                - handleCreatedFiles()          
+                - handleModifiedFiles()         
+                - handleRenamedFiles()          
+                - HandleDeletedFiles()          
+                - DbManager.renameFile()
+                                     Total:  10 hours
+
+
  * Note: Times are estimates. Not included is research time, time used
    by meetings, class time, etc.
 </pre>
