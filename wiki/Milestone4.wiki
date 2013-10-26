@@ -111,7 +111,7 @@ This is a main use case in the system and must work to a very high standard.
 14 October 2013
 
 
-===View Revision <sup>(Alsharif)</sup>===
+===View revision <sup>(Alsharif)</sup>===
 ====Level=====
 Summary
 
@@ -151,9 +151,9 @@ This is a main use case in the system and must work to a very high standard.
 17 October 2013
 
 
-===Create Folder <sup>(Rizvi)</sup>===
+===Create folder <sup>(Rizvi)</sup>===
 ====Level==== 
-summary
+Summary
 
 ====Actor====
 System
@@ -171,7 +171,7 @@ This is a main use case in the system and must work to a very high standard.
 17 October 2013
 
 
-===Revert File to Revision <sup>(Butler)</sup>===
+===Revert file to revision <sup>(Butler)</sup>===
 ====Level====
 Summary
 
@@ -190,7 +190,8 @@ This part of the program is high priority, it is not critical to the backup func
 ====Version====
 October 20th, 2013
 
-===Change Live Folder <sup>(Butler)</sup>===
+
+===Change live directory <sup>(Butler)</sup>===
 ====Level====
 Summary
 
@@ -208,6 +209,7 @@ Low priority part of the program. The system functions as specified without this
 
 ====Version====
 October 20th, 2013
+
 
 ----
 {{{
@@ -277,7 +279,7 @@ October 20th, 2013
   * FBMS
  
 ====Level====
-  * Sub function
+  * User goal
  
 ====Primary Actor====
   * User
@@ -315,7 +317,7 @@ October 20th, 2013
   * FBMS
 
 ====Level====
-  * System goal
+  * User goal
 
 ====Primary Actor====
   * User
@@ -353,12 +355,13 @@ October 20th, 2013
 ====Frequency of Occurrence====
   * Every time a new file is created in live folder
 
+
 ===Rename file <sup>(Tao)</sup>===
 ====Scope====
   * FBMS
 
 ====Level====
-  * System goal
+  * User goal
 
 ====Primary Actor====
   * User
@@ -394,12 +397,13 @@ October 20th, 2013
 ====Frequency of Occurrence====
   * Every time a file is renamed in live folder
 
+
 ===Rename Folder <sup>(Alsharif)</sup>===
 ====Scope====
   * FBMS
 
 ====Level====
-  * Subfunction
+  * User goal
 
 ====Primary Actor====
   * User
@@ -432,9 +436,9 @@ October 20th, 2013
   * Each time a folder’s name is changed
 
 
-===Revert File to Revision<sup>(Butler)</sup>===
+===Revert file to revision <sup>(Butler)</sup>===
 ====Scope====
-  * FBMS general use.
+  * FBMS
  
 ====Level====
   * User goal
@@ -474,7 +478,7 @@ October 20th, 2013
   * Require write/read access to the file being modified. 
 
 ====Technology and Data Variations List====
-None
+  * None
 
 ====Frequency of Occurrence====
   * Whenever specified by the user.
@@ -495,25 +499,25 @@ None
 ----
 
 ==3 - Supplementary specification==
-
 ===Interfaces <sup>(Rizvi)</sup>===
+The interface consists of the GUI windowing system along with a minimizer tray icon. Closing the GUI minimizes the application to an icon in the system tray. This means that the application does not end simply by pressing the “x” button on the GUI but needs to be shut down from the system tray icon which has an “exit” option for closing the application entirely. We have tried to make the main GUI as simple as possible so that an average user could be able to handle the software. It comprises of a few simple areas namely a table, a toolbar, and a menubar.
 
-The interface consists of the GUI windowing system along with a minimizer tray icon. Closing the GUI minimizes the application to an icon in the system tray. This means that the application does not end simply by pressing the “x” button on the GUI but needs to be shut down from the system tray icon which has an “exit” option for closing the application entirely. We have tried to make the main GUI as simple as possible so that an average user could be able to handle the software. It comprises of a few simple areas namely a table, a Toolbar and a Menubar:
+*Table*: This is used to display the contents of the backup directory. This directory is specified by the user and shows detailed entries of the names of the files or the folder, the sizes, the modified and the created dates as well as the last date it was accessed on and finally the revision size and the number of current revisions. Interactive features of the table include a scrollbar, which the user can use to scroll up and down the list and selection, allowing the user to select a single file at a time.
 
-Table: This is used to contain a live directory of the back up files and folders. This directory is specified by the user and shows detailed entries of the names of the files or the folder, the sizes, the modified and the created dates as well as the last date it was accessed on and finally the revision size and the number of current revisions. Interactive features of the table include a Scrollbar, which the user can use to scroll up and down the list, single selection feature, allowing the user to select a single file at a time.
-When a folder is selected the table refreshes the contents of the list by generating the contents of the folder. Selecting a file opens up a dialog box with information of the file revisions. Errors are to be handled by the means of dialog boxes with “OK” and “cancel” buttons. Clicking one of these buttons
-closes the dialog.
+When a folder is selected the table refreshes the contents of the list by generating the contents of the folder. Selecting a file opens up a dialog box with information of the file revisions. Errors are handled by the means of dialog boxes.
 
-Toolbar: This is located above the table and contains two buttons and a text field. One of the button is an up button enabling the user to navigate out of the current folder. However the button is disabled if the user is already in the backup directory. The second button is the refresh button which refreshes the directory to the latest version. The text field is set to contain the current path of the directory and is also disabled if the user is already in the back up directory.
+*Toolbar*: This is located above the table and contains two buttons and a text field. One of the button is an up button enabling the user to navigate out of the current folder. However the button is disabled if the user is already in the backup directory. The second button is the refresh button which refreshes the directory to the latest version. The text field is set to contain the current path of the directory and is also disabled if the user is already in the back up directory.
 
 Menubar: At the very top is a menubar which consists of a file and a help item. The file item expands to options of:
-View revisions: It works in the same was a doubeclicking a file ie. Opens the revision dialog box. If no files are selected, do nothing.
-Copy-to: creates a dialog for selecting the folder to copy the selected file to.  Like review revisions, this cannot be done if no file is selected. 
-Restore all: prompts the user (with a JOptionPane) if they're sure they want to continue. Upon approval, the directory is restored to the previous revision.
-Exit: closes the GUI window. However it can be brought back by clicking on the icon in the system tray.
+
+  * View revisions: It works in the same was a double clicking a file (eg, opens the revision dialog box; if no files are selected, do nothing).
+  * Copy-to: Creates a dialog for selecting the folder to copy the selected file to.  Like review revisions, this cannot be done if no file is selected.
+  * Restore all: Prompts the user (with a dialog box) if they're sure they want to continue. Upon approval, the directory is restored to the previous revision.
+  * Exit: Closes the GUI window. However it can be brought back by clicking on the icon in the system tray.
+  
 The help menu has a single option to display the online help. This opens the website for the software in the users default browser.
 
- 
+
 ===Vision <sup>(Butler)</sup>===
 FBMS is a multiplatform, self-contained automated backup and revision program. It does not require cloud services or any online access to function. It uses local resources and ideally secondary drive locations to backup critical data.
 
@@ -552,7 +556,13 @@ These components integrate with our program and were chosen with efficiency in m
     * A backup of database will be stored in backup folder for a backup. 
   
 ===Reliability <sup>(Alsharif)</sup>===
-For handling of errors we have a thread running every 5 seconds, which handles all the changes in files to keep track on them. Doing this will help in handling errors which are logged for bug detection, etc. When copying files, the program tries again on failure, and issue non-fatal errors rather than crashing the entire program. FileOp? exception handling to handle various unusual events such as open files, non-existant, permission errors and so on. File scanner chosen over scanning folder for changes in CRC (old plan). Jnotify integrates with OS (for maximal speed).
+To maximize efficiency, the watcher module, which notices changes to files, adds these changes to lists. At specific intervals, the program handles the files in these lists. This reduces the program's use of system resources by allowing the program to frequently sleep instead of constantly looping while the program is running. It also drastically reduces the number of file operations. Some operating systems and programs will actually modify a file multiple times in just a few milliseconds (even if the file only appears to have been modified once from the user's perspective). The interval based system combines duplicate operations. So if the user modifies a file a dozen times within the interval, the program only stores one modification as a revision (with that revision being all the changes since the file was last modified).
+
+Similarly, we use the JNotify library specifically because it binds with the operating systems for maximum performance. At one early point of time, we actually considered checking _all_ the files in the live directory for changes in their CRC value, which would have been much slower.
+
+The program also handles errors in a user-friendly way. Fatal errors are displayed as dialog boxes and also copied to the log (which helps find the source of errors). Non-fatal errors use a non-obtrusive error pop-up message that appears in the bottom corner of the screen and disappears on its own after a few seconds.
+
+Finally, when file operations cannot be performed on a file (for reasons such as the file being open in another program or invalid permissions), the operation is retried after a short delay before informing the user of the error (which is a non-fatal error, as the file can simply be skipped).
 
 
 ----
@@ -623,19 +633,18 @@ http://i.imgur.com/bwbqnym.png
 ===First run <sup>(Hoffert)</sup>===
 http://i.imgur.com/71cpCum.png
 
-===Revert to File Revision <sup>(Butler)</sup>===
+
+===Revert to file revision <sup>(Butler)</sup>===
 http://i.imgur.com/4IXzBNa.png
 
-===Delete File <sup>(Rizvi)</sup>===
+
+===Delete file <sup>(Rizvi)</sup>===
 http://i.imgur.com/rPLnksr.png
 
-===Rename File <sup>(Tao)</sup>===
+
+===Rename file <sup>(Tao)</sup>===
 http://i.imgur.com/jmkN0pT.jpg
 
-----
-  * Use one of the use cases you used in (1)
-  * Use UMLet: http://www.umlet.com/umlet_12_1/umlet_12.1.zip
-----
 
 ----
 {{{
@@ -654,36 +663,37 @@ http://i.imgur.com/jmkN0pT.jpg
 ==8 - Operation Contracts==
 ===Change backup folder <sup>(Hoffert)</sup>===
 ====Cross references====
-  * Copy file operation
-  * Delete file operation
-  * Set configuration database operation
+  * Copy file operation.
+  * Delete file operation.
+  * Set configuration database operation.
 
 ====Pre-conditions====
   * None
 
 ====Post-conditions====
-  * The backup directory is changed, both in the program and in the file that stores the backup directory's location
-  * If the user agreed to it, the contents of the previous backup directory were copied to the new directory
-  * If the user agreed to it, the old backup directory is deleted
+  * The backup directory is changed, both in the program and in the file that stores the backup directory's location.
+  * If the user agreed to it, the contents of the previous backup directory were copied to the new directory.
+  * If the user agreed to it, the old backup directory is deleted.
 
 
 ===First run <sup>(Hoffert)</sup>===
 ====Cross references====
-  * Initialize database operation
-  * Set configuration database operation
+  * Initialize database operation.
+  * Set configuration database operation.
 
 ====Pre-conditions====
   * None
 
 ====Post-conditions====
-  * The live and backup directory locations are set
-  * The database file is created if this is a new backup
+  * The live and backup directory locations are set.
+  * The database file is created if this is a new backup.
 
 
 ===Create File <sup>(Tao)</sup>===
 ====Cross references====
-  * Insert new record into database
-  * Rename file if necessary
+  * Watcher
+  * Insert new record into database.
+  * Rename file if necessary.
 
 ====Pre-conditions====
   * Backup folder exists and has enough space.
@@ -695,8 +705,9 @@ http://i.imgur.com/jmkN0pT.jpg
 
 ===Rename File===
 ====Cross references <sup>(Tao)</sup>====
-  * Insert a rename record into database
-  * Change file name in previous records
+  * Watcher
+  * Insert a rename record into database.
+  * Change file name in previous records.
   * Change previous backups' name.
 
 ====Pre-conditions====
@@ -713,9 +724,9 @@ http://i.imgur.com/jmkN0pT.jpg
 
 ===Rename folder <sup>(Alsharif)</sup>===
 ====Cross references====
-  * Copy files operation
-  * Delete files operation
-  * Change backup folder
+  * Copy files operation.
+  * Delete files operation.
+  * Change backup folder.
 
 ====Pre-conditions====
   * None
@@ -727,20 +738,21 @@ http://i.imgur.com/jmkN0pT.jpg
 
 ===View revision <sup>(Alsharif)</sup>===
 ====Cross references====
-  * Display the file history
-  * Revert the revision
+  * GUI creation.
+  * Display the file history.
+  * Revert the revision.
 
 ====Pre-conditions====
   * File should be selected.
 
 ====Post-conditions====
-  * The revision of a selected file is shown using GUI.
+  * The revision of a selected file is shown using the GUI.
 
 
-===Revert to File Revision <sup>(Butler)</sup>===
+===Revert to file revision <sup>(Butler)</sup>===
 ====Cross references====
-  * FileHistory all but rename.
-  * Copy and Diff file operations in FileOp
+  * FileHistory (all but the renaming functions).
+  * Copy and Diff file operations in FileOp.
 
 ====Pre-conditions====
   * A revision for the file must exist.
@@ -751,7 +763,7 @@ http://i.imgur.com/jmkN0pT.jpg
   * Version that was replaced is still maintained as a revision.
 
 
-===Change Live Directory <sup>(Butler)</sup>===
+===Change live directory <sup>(Butler)</sup>===
 ====Cross references====
   * DbManager for config changes.
 
@@ -764,28 +776,37 @@ http://i.imgur.com/jmkN0pT.jpg
   * System is running in the same condition it was before the change.
 
 
-----
-===Delete File <sup>(Rizvi)</sup>===
+===Delete file <sup>(Rizvi)</sup>===
 ====Cross references====
-  * Delete Folder
+  * Watcher
+  * Delete Folder.
 
 ====Pre-conditions====
-  * User deletes a file
+  * User deletes a file.
 
 ====Post-conditions====
-  * revisions are renamed
+  * Entries of this file name in the other file lists are removed (to prevent invalid operations).
   
-----
-===Create Folder <sup>(Rizvi)</sup>===
+
+===Create folder <sup>(Rizvi)</sup>===
 ====Cross references====
-  * Copy function
+  * Watcher
 
 ====Pre-conditions====
-  * User creates a folder 
+  * User creates a folder.
 
 ====Post-conditions====
-  * none
+  * None
 
+
+----
+{{{
+	
+}}}
+----
+{{{
+	
+}}}
 ----
 {{{
 	
@@ -879,7 +900,7 @@ The hours that have been spent so far on the project are:
 <pre>
 	Mike:
 		- Planning and documentation:   5 hours
-		- Milestones:                   8 hours
+		- Milestones:                  10 hours
 		- Utility demo:                 8 hours
 		- Skeleton implemention and
 		  PoD classes:                  2 hours
@@ -891,7 +912,7 @@ The hours that have been spent so far on the project are:
 		  to startup:                   5 hours
 		- JUnit testing code:           2 hours
 		- Errors class:                 3 hours
-		                        Total: 45 hours
+		                        Total: 47 hours
 	Da:
 		- Rough design of modules:      1 hour
 		- Rough design of functions:    1 hour
@@ -910,25 +931,28 @@ The hours that have been spent so far on the project are:
                                       Total:    9 hours
 
 	Hattan:
-		-Milestones		                9 hours
+		-Milestones                     9 hours
                 -Work on Presentation slides    3 hours
-                -
-                -
-
-                                      Total:          11 hours
+                                      Total:   11 hours
 
 	Michael:
 	        - Milestones:                   4 hours
                 - getConfig():                  3 hours
                 - setConfig():                  3 hours
-                - handleCreatedFiles()          
-                - handleModifiedFiles()         
-                - handleRenamedFiles()          
-                - HandleDeletedFiles()          
-                - DbManager.renameFile()
-                                     Total:  10 hours
+                                      Total:   10 hours
 
 
  * Note: Times are estimates. Not included is research time, time used
    by meetings, class time, etc.
 </pre>
+
+==12 - Meetings==
+|| *Date* || *Attendance* || *Discussion* ||
+|| 10 September || All || Brainstorming ideas; program choice; identifying strengths ||
+|| 17 September || All || Program layout; functionality; some use cases; Milestone 2 ||
+|| 24 September || All || Program components; GUI design; Assigned components; Requirement changes; Milestone 3 ||
+|| 1 October || All || Current progress; presentation; code reviews; JUnit ||
+|| 8 October || All || Implementation review ||
+|| 15 October || All || Milestone 4; fleshed out use cases; UML stuff ||
+
+ `* Note: In-class collaboration not included`
