@@ -639,12 +639,15 @@ http://i.imgur.com/4IXzBNa.png
 
 
 ===Delete file <sup>(Rizvi)</sup>===
-http://i.imgur.com/rPLnksr.png
+http://i.imgur.com/5M9tjtZ.png
 
 
 ===Rename file <sup>(Tao)</sup>===
 http://i.imgur.com/jmkN0pT.jpg
 
+
+===Rename folder <sup>(Alsharif)</sup>===
+http://i.imgur.com/3unT6QG.png
 
 ----
 {{{
