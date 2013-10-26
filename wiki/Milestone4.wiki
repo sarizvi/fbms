@@ -552,13 +552,7 @@ These components integrate with our program and were chosen with efficiency in m
     * A backup of database will be stored in backup folder for a backup. 
   
 ===Reliability <sup>(Alsharif)</sup>===
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-  * Done by Hattan
-  * Handling of errors
-  * Logging
-  * Actions that have reliability issues, like copying files
-  * Performance (file scanner, control does file ops at intervals, etc)
+For handling of errors we have a thread running every 5 seconds, which handles all the changes in files to keep track on them. Doing this will help in handling errors which are logged for bug detection, etc. When copying files, the program tries again on failure, and issue non-fatal errors rather than crashing the entire program. FileOp? exception handling to handle various unusual events such as open files, non-existant, permission errors and so on. File scanner chosen over scanning folder for changes in CRC (old plan). Jnotify integrates with OS (for maximal speed).
 
 
 ----
