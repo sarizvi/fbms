@@ -908,8 +908,15 @@ The hours that have been spent so far on the project are:
                 -GUI design:
 
                                       Total:    9 hours
+
 	Hattan:
-		-
+		-Milestones		                9 hours
+                -Work on Presentation slides    3 hours
+                -
+                -
+
+                                      Total:          11 hours
+
 	Michael:
 	        - Milestones:                   4 hours
                 - getConfig():                  3 hours
