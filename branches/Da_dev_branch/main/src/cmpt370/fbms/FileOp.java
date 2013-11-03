@@ -15,7 +15,9 @@
 
 package cmpt370.fbms;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -30,6 +32,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.List;
 
 public class FileOp
@@ -281,9 +284,35 @@ public class FileOp
 		return targetFile.length();
 	}
 
+	/**
+	 * Generate String List. The List is used for creating diff file.
+	 * 
+	 * @param file
+	 *            the source file.
+	 * @return a List contains the information from the source file. Will return null if error
+	 *         occurs.
+	 */
 	public static List<String> fileToList(Path file)
 	{
-		return null;
+		List<String> lines = new LinkedList<String>();
+		String line = "";
+		BufferedReader in;
+		try
+		{
+			in = new BufferedReader(new FileReader(file.toAbsolutePath().toString()));
+			while((line = in.readLine()) != null)
+			{
+				lines.add(line);
+			}
+			in.close();
+		}
+		catch(IOException e)
+		{
+			Errors.nonfatalError("Unable to read file: " + file.toAbsolutePath().toString(),
+					"Error");
+			return null;
+		}
+		return lines;
 	}
 
 	/**
