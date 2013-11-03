@@ -15,9 +15,7 @@
 
 package cmpt370.fbms;
 
-import java.util.Comparator;
-
-public class RevisionInfo implements Comparator<RevisionInfo>
+public class RevisionInfo implements Comparable<RevisionInfo>
 {
 	public long id;
 	public String path;
@@ -26,8 +24,8 @@ public class RevisionInfo implements Comparator<RevisionInfo>
 	public long time;
 
 	@Override
-	public int compare(RevisionInfo o1, RevisionInfo o2)
+	public int compareTo(RevisionInfo o)
 	{
-		return (int) (o1.time - o2.time);
+		return (int) (o.time - this.time);
 	}
 }
