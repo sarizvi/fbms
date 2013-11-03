@@ -5,5 +5,10 @@ This page links to all documentation concerning FBMS.
   * [https://code.google.com/p/fbms/wiki/TechnicalDetails Technical details document] - Contains an in-depth description of the interior workings of the project, including helpful API and library links
 
 == Hand in work ==
-  * *Milestone 2*: [https://code.google.com/p/fbms/wiki/EarlyProjectProposal Early Project Proposal] - Due Sept 20. Note: See [https://moodle.cs.usask.ca/moodle/pluginfile.php/2128/mod_assign/intro/Milestone-2-An_Early_Project_Definition.pdf example].
-  * *Milestone 3*: [https://code.google.com/p/fbms/wiki/FinalProjectProposal Final Project Proposal] - Due Sept 30. Note: See [https://moodle.cs.usask.ca/moodle/pluginfile.php/2129/mod_assign/intro/Milestone3.pdf example].
+  * *Milestone 2*: [https://code.google.com/p/fbms/wiki/EarlyProjectProposal Early Project Proposal]
+  * *Milestone 3*: [https://code.google.com/p/fbms/wiki/FinalProjectProposal Final Project Proposal]
+  * *Milestone 4*: [https://code.google.com/p/fbms/wiki/Milestone4 Requirements and preliminary design]
+  
+== Other links ==
+  * [https://code.google.com/p/fbms/source/list SVN log]
+  * [https://code.google.com/p/fbms/source/browse/ Browse code]
