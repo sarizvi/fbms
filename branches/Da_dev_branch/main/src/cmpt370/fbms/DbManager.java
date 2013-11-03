@@ -5,18 +5,16 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public class DbManager
 {
-	private static ReentrantLock lock = new ReentrantLock();
-
 	// Holds the active connection
 	private static Connection connection = null;
 
@@ -147,7 +145,7 @@ public class DbManager
 
 			while(revisionRows.next())
 			{
-				// Table structure: (id INTEGER, path STRING, diff BLOB, delta INTEGER, time
+				// Table structure: (id INTEGER, path STRING, diff STRING, delta INTEGER, time
 				// INTEGER)
 				RevisionInfo newRevision = new RevisionInfo();
 
@@ -183,91 +181,107 @@ public class DbManager
 		return null;
 	}
 
-	public static void insertRevision(Path file, String diff, long timestamp, int delta)
-	{
-
-	}
-
-	public static void renameFile(Path file, Path newName)
-	{
-
-	}
-
 	/**
-	 * Grabs setting values from the database when provided with a name for the given setting.
+	 * Inserts a revision into the database using the supplied information and the current time as
+	 * the time stamp.
 	 * 
-	 * @param settingName
-	 *            Name of the setting you want the value of.
-	 * @return Returns the associated value with the setting name.
+	 * @param file
+	 *            The path to the file that we're inserting (in the live directory).
+	 * @param diff
+	 *            The diff of the revision as a String (FileOp.fileToString can be useful to get
+	 *            this String representation).
+	 * @param delta
+	 *            The difference in file size that this revision introduced (positive means that
+	 *            this revision increased the file size of the file, while negative means the file
+	 *            size decreased).
 	 */
-	public static String getConfig(String settingName)
+	public static void insertRevision(Path file, String diff, long delta)
 	{
-		// Holds our return result.
-		String toGet = null;
-		if(settingName.equals(null))
-		{
-			Errors.fatalError("Setting name provided is null.");
-		}
+		// Using prepared statements because the diff string can be very long
+		PreparedStatement revision = null;
+		String insertStatment = "INSERT INTO revisions (path, diff, delta, time) VALUES("
+				+ "?, ?, ?, ?)";
 
 		try
 		{
-			// Setup our connection object to run queries from.
+			revision = connection.prepareStatement(insertStatment);
+
+			// path
+			revision.setString(1, file.toString());
+			// diff
+			revision.setString(2, diff);
+			// delta
+			revision.setLong(3, delta);
+			// time
+			revision.setLong(4, System.currentTimeMillis() / 1000L);
+
+			revision.executeUpdate();
+		}
+		catch(SQLException e1)
+		{
+			Errors.nonfatalError("Could not insert revision into database", e1);
+		}
+	}
+
+	/**
+	 * Renames all instances of a certain file to a new name in the revisions database.
+	 * 
+	 * @param file
+	 *            The path of the file we are renaming.
+	 * @param newName
+	 *            The new name of the file. Note this does not include the full path: just the file
+	 *            name (and extension).
+	 */
+	public static void renameFile(Path file, String newName)
+	{
+		try
+		{
+			// Figure out the new name
+			Path newPath = file.resolveSibling(newName);
+
 			Statement statement = connection.createStatement();
+			statement.executeUpdate("UPDATE revisions SET path = '" + newPath.toString()
+					+ "' WHERE path = '" + file.toString() + "'");
 
+		}
+		catch(SQLException e)
+		{
+			Errors.nonfatalError("Could not rename revisions in database.", e);
+		}
+	}
 
-			// Since we have so few settings using cases to find our values.
-			// Will look into doing a dynamic SQL query later using something like
-			// PreparedStatement.
-			if(settingName.equals("liveDirectory"))
+	/**
+	 * Grabs the value of a specified setting from the settings database.
+	 * 
+	 * @param settingName
+	 *            Name of the setting you want the value of.
+	 * @return Returns the value of the setting or null if it does not exist.
+	 */
+	public static String getConfig(String settingName)
+	{
+		String settingValue = null;
+
+		try
+		{
+			// Get the row with the setting name
+			Statement statement = connection.createStatement();
+			ResultSet settingRow = statement.executeQuery("SELECT * FROM settings WHERE name = '"
+					+ settingName + "'");
+
+			// Make sure that there is a row to get data from (there should be 0 or 1)
+			if(settingRow.next())
 			{
-
-				ResultSet settingsRows = statement.executeQuery("SELECT * FROM settings WHERE name = 'liveDirectory'");
-
-				// Cycle through all settings named liveDirectory (should only be one).
-				while(settingsRows.next())
-				{
-					if(settingsRows.getString("name").equals("liveDirectory"))
-					{
-						// Set it to our return value
-						toGet = settingsRows.getString("setting");
-					}
-				}
+				settingValue = settingRow.getString("setting");
 			}
-			if(settingName.equals("backupDirectory"))
-			{
-				// cycle through all settings named backupDirectory (again should only be one).
-				ResultSet settingsRows = statement.executeQuery("SELECT * FROM settings WHERE name = 'backupDirectory'");
-
-				while(settingsRows.next())
-				{
-					if(settingsRows.getString("name").equals("backupDirectory"))
-					{
-						// Set our return value.
-						toGet = settingsRows.getString("setting");
-					}
-				}
-			}
-
 		}
 		catch(SQLException e)
 		{
 			Errors.fatalError("Retrieval of setting value failed", e);
 		}
-		// If our string is still null throw an error.
 
-		try
-		{
-			if(toGet.equals(null))
-			{
-				throw new NoSuchFieldException();
-			}
-		}
-		catch(NoSuchFieldException e)
-		{
-			Errors.nonfatalError("Row in settings not found.", e);
-		}
-
-		return toGet;
+		// Will end up returning either the setting value if it was found or null if it was not
+		// found
+		return settingValue;
 	}
 
 	/**
@@ -281,56 +295,25 @@ public class DbManager
 	 */
 	public static void setConfig(String settingName, String settingValue)
 	{
-		if(settingName == null || settingValue == null)
-		{
-			Errors.fatalError("Null input provided to setConfig(), unable to proceed.");
-		}
-
-		// Build our strings for our queries concatenating with our variables.
-		String update = "UPDATE settings SET setting = '" + settingValue + "' WHERE name = '"
-				+ settingName + "'";
-		String insert = "INSERT INTO settings(name, setting) VALUES('" + settingName + "', '"
-				+ settingValue + "')";
-
 		try
 		{
-
-			// Grab statement from connection so we can call execute for our queries.
 			Statement statement = connection.createStatement();
 
+			// Search for our row
+			ResultSet settingsRows = statement.executeQuery("SELECT * FROM settings WHERE name = '"
+					+ settingName + "'");
 
-			if(settingName.equals("liveDirectory"))
+			// If the row exists, update it
+			if(settingsRows.next())
 			{
-				// Search for our row.
-				ResultSet settingsRows = statement.executeQuery("SELECT * FROM settings WHERE name = 'liveDirectory'");
-
-				// If the row exists, update it.
-				if(settingsRows.next())
-				{
-					System.out.println(update);
-					statement.executeUpdate(update);
-				}
-				// If the row does not exist, insert it.
-				else
-				{
-					statement.executeUpdate(insert);
-				}
-
+				statement.executeUpdate("UPDATE settings SET setting = '" + settingValue
+						+ "' WHERE name = '" + settingName + "'");
 			}
-			if(settingName.equals("backupDirectory"))
+			// If the row does not exist, insert it
+			else
 			{
-				ResultSet settingsRows = statement.executeQuery("SELECT * FROM settings WHERE name = 'backupDirectory'");
-
-				// If the row exists, update it.
-				if(settingsRows.next())
-				{
-					statement.executeUpdate(update);
-				}
-				// If the row does not exist, insert it.
-				else
-				{
-					statement.executeUpdate(insert);
-				}
+				statement.executeUpdate("INSERT INTO settings(name, setting) VALUES('"
+						+ settingName + "', '" + settingValue + "')");
 			}
 
 		}
@@ -340,6 +323,10 @@ public class DbManager
 		}
 	}
 
+	/**
+	 * Closes the database connection. Meant for tests where the connection is opened and closed for
+	 * each test (as there's no way to be certain of the order the tests will be run in).
+	 */
 	public static void close()
 	{
 		if(connection != null)

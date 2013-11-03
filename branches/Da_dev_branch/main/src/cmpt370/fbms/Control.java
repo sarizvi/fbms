@@ -1,5 +1,6 @@
 package cmpt370.fbms;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -46,6 +47,7 @@ public class Control
 	{
 		startup();
 		fileHandler();
+		FrontEnd.createAndShowGUI();
 	}
 
 	/**
@@ -236,24 +238,70 @@ public class Control
 
 	}
 
+	/**
+	 * Obtains the specified revision and displays it in the default program for that type of file.
+	 * 
+	 * @param file
+	 *            The file's path (in the live directory).
+	 * @param timestamp
+	 *            The Unix time stamp (seconds since Unix epoch).
+	 */
 	public static void displayRevision(Path file, long timestamp)
 	{
-
+		Path fileToOpen = FileHistory.obtainRevision(file, timestamp);
+		try
+		{
+			Desktop.getDesktop().open(fileToOpen.toFile());
+		}
+		catch(IOException e)
+		{
+			Errors.nonfatalError("Could not open revision file.", e);
+		}
 	}
 
-	public static void displayRevisionChanges(Path file, long timestamp)
+	/**
+	 * Reverts a revision by obtaining a specific revision and making that the current revision.
+	 * 
+	 * @param file
+	 *            The path to the file (in the backup directory) to revert. The file must exist.
+	 * @param timestamp
+	 *            The time stamp (in Unix time stamp format) of the revision we want.
+	 */
+	public static void revertRevision(Path file, long timestamp)
 	{
+		if(file.toFile().exists())
+		{
+			// Get the revision we want and make a diff for it
+			Path revertedFile = FileHistory.obtainRevision(file, timestamp);
+			Path diffFromCurrent = FileOp.createDiff(file, revertedFile);
 
+			// Get the filesize of our newly reverted file as well as the delta from the old file
+			long fileSize = FileOp.fileSize(revertedFile);
+			long delta = fileSize - FileOp.fileSize(file);
+
+			// Store the revision and copy the reverted file over the backup directory
+			FileHistory.storeRevision(FileOp.convertPath(file), diffFromCurrent, fileSize, delta);
+			FileOp.copy(revertedFile, file);
+
+			// Finally, copy that backup directory copy to the live directory
+			FileOp.copy(file, FileOp.convertPath(file).getParent());
+		}
+		else
+		{
+			Errors.nonfatalError("The file you wanted to revert does not exist!");
+		}
 	}
 
-	public static void revertRevision(Path file, long timestampt)
-	{
-
-	}
-
+	/**
+	 * Copies all files in the backup directory to the live directory.
+	 */
 	public static void restoreBackup()
 	{
-
+		// Iterate through all files in the backup folder, copying them to the live directory
+		for(File child : backupDirectory.toFile().listFiles())
+		{
+			FileOp.copy(child.toPath(), liveDirectory);
+		}
 	}
 
 	public static void copyTo(Path sourceFile, Path destFolder)
