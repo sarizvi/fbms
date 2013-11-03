@@ -1,3 +1,18 @@
+/*
+ * FBMS: File Backup and Management System Copyright (C) 2013 Group 06
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
+ */
+
 package cmpt370.fbms;
 
 import java.awt.Desktop;
@@ -46,6 +61,7 @@ public class Control
 	public static void main(String[] args)
 	{
 		startup();
+		startupScan(liveDirectory);
 		fileHandler();
 		FrontEnd.createAndShowGUI();
 	}
@@ -180,6 +196,58 @@ public class Control
 	}
 
 	/**
+	 * Scans the live directory for byte changes on startup, allowing the detection of files that
+	 * were added or modified when the program was not running. Renames, however, are a lost cause.
+	 * They'll be recognized as a new file.
+	 * 
+	 * @param directory
+	 *            The directory to base the scan on (ie, the live directory)
+	 */
+	private static void startupScan(Path directory)
+	{
+		for(File file : directory.toFile().listFiles())
+		{
+			if(!file.isDirectory())
+			{
+				// If the file doesn't already exist, we can just copy it over
+				if(!FileOp.convertPath(file.toPath()).toFile().exists())
+				{
+					Path targetDirectory = FileOp.convertPath(file.toPath()).getParent();
+					FileOp.copy(file.toPath(), targetDirectory);
+
+					logger.info("Startup: Found new file " + file.toString());
+				}
+				// The file does exist, so determine if the file has been changed. If it
+				// hasn't, we need to create a revision for this file.
+				else if(!FileOp.isEqual(file.toPath(), FileOp.convertPath(file.toPath())))
+				{
+					// Create the diff
+					Path diffFile = FileOp.createDiff(FileOp.convertPath(file.toPath()),
+							file.toPath());
+					// Difference in file sizes
+					long delta = FileOp.fileSize(FileOp.convertPath(file.toPath()))
+							- FileOp.fileSize(file.toPath());
+
+					// Store the revision
+					FileHistory.storeRevision(file.toPath(), diffFile,
+							FileOp.fileSize(file.toPath()), delta);
+
+					// Finally, copy the file over
+					Path targetDirectory = FileOp.convertPath(file.toPath()).getParent();
+					FileOp.copy(file.toPath(), targetDirectory);
+
+					logger.info("Startup: Found modified file " + file.toString());
+				}
+			}
+			else
+			{
+				// Call itself recursively for directories
+				startupScan(directory.resolve(file.toPath()));
+			}
+		}
+	}
+
+	/**
 	 * This method sets up the loop for going through the array lists that the Watcher module
 	 * populates. It also creates an infinite loop in a separate thread, allowing the program to run
 	 * indefinitely in the background.
@@ -304,8 +372,16 @@ public class Control
 		}
 	}
 
+	/**
+	 * Just a wrapper function for the FrontEnd.
+	 * 
+	 * @param sourceFile
+	 *            The path of the file we want to copy.
+	 * @param destFolder
+	 *            The folder we want to copy this file to.
+	 */
 	public static void copyTo(Path sourceFile, Path destFolder)
 	{
-
+		FileOp.copy(sourceFile, destFolder);
 	}
 }

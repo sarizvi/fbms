@@ -1,3 +1,18 @@
+/*
+ * FBMS: File Backup and Management System Copyright (C) 2013 Group 06
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
+ */
+
 package cmpt370.fbms;
 
 import java.io.IOException;
@@ -16,14 +31,20 @@ import org.junit.Test;
  */
 public class TesterVisual
 {
+	// Get folder contents
 	@Test
+	@Ignore
 	public void dataGetFolderContents() throws IOException
 	{
+		// Manual setup
 		Path path = Paths.get("").toAbsolutePath();
 		Control.backupDirectory = path;
 		DbManager.init();
+
+		// Get the contents of this directory
 		List<FileInfo> list = Data.getFolderContents(path);
 
+		// And print out what we know
 		for(FileInfo file : list)
 		{
 			System.out.println(file.fileName);
@@ -37,10 +58,13 @@ public class TesterVisual
 				System.out.println("\tRevisions size:\t" + file.revisionSizes + " B");
 			}
 		}
+
+		// Cleanup
 		Files.delete(path.resolve(".revisions.db"));
 		DbManager.close();
 	}
 
+	// Insert a revision, rename it, and then obtain it
 	@Test
 	public void dbManagerInsertRevision() throws IOException
 	{
@@ -74,6 +98,8 @@ public class TesterVisual
 		DbManager.close();
 	}
 
+
+	// Demonstrates a fatal error with just a message
 	@Test
 	@Ignore
 	public void errorsFatalError()
@@ -81,6 +107,7 @@ public class TesterVisual
 		Errors.fatalError("She turned me into a newt!");
 	}
 
+	// Demonstrates a fatal error that also has a stack trace included (see also: the log)
 	@Test
 	@Ignore
 	public void errorsFatalErrorWithStackTrace()
@@ -97,17 +124,15 @@ public class TesterVisual
 		}
 	}
 
+	// Demonstrates a non-fatal error message
 	@Test
 	@Ignore
-	public void errorsNonfatalError()
+	public void errorsNonfatalError() throws InterruptedException
 	{
 		Errors.nonfatalError("Such error message!<br />&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"
 				+ "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;So recovery!<br />&emsp;&emsp;Wow!", "Wow!");
-		try
-		{
-			Thread.sleep(5000); // So the program doesn't instantly terminate
-		}
-		catch(InterruptedException e)
-		{}
+
+		// Sleep so the program doesn't instantly terminate
+		Thread.sleep(5000);
 	}
 }
