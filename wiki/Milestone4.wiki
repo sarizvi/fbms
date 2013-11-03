@@ -920,11 +920,11 @@ The hours that have been spent so far on the project are:
 		- Rough design of modules:      1 hour
 		- Rough design of functions:    1 hour
 		- Work on previous milestones:  4 hours
-		- Work on FileOp:               3 hours
+		- Work on FileOp:               6 hours
 		- Milestone 4(text):            5 hours
 		- Milestone 4(graph)(WIP):      1 hours
-		- Test case:                    4 hours         
-                                      Total:  18 hours
+		- Test case:                    2 hours         
+                                      Total:  23 hours
 	Ahsen:  
 		-Milestone 4 (documentation):   5 hours
                 -Frontend implementation:       4 hours
