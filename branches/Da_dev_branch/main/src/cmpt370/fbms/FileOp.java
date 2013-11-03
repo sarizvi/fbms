@@ -175,6 +175,7 @@ public class FileOp
 				// such that this parent exists
 				destPath.getParent().toFile().mkdirs();
 
+
 				// Copy the actual file
 				Files.copy(path, destPath, StandardCopyOption.REPLACE_EXISTING);
 			}
@@ -196,9 +197,33 @@ public class FileOp
 		return null;
 	}
 
+	/**
+	 * Rename the given file to a new name.
+	 * 
+	 * @param file
+	 *            the file to rename.
+	 * @param newName
+	 *            the file's new name.
+	 */
 	public static void rename(Path file, String newName)
 	{
-
+		File mFile = file.toFile();
+		File newFile = new File(mFile.getParentFile(), newName);
+		if(!mFile.exists())
+		{
+			Control.logger.warn("Could not rename non-existed file: " + mFile.getAbsolutePath());
+			return;
+		}
+		if(newFile.exists())
+		{
+			Control.logger.warn("Could not rename to existed file: " + newFile.getAbsolutePath());
+			return;
+		}
+		if(!mFile.renameTo(newFile))
+		{
+			Errors.nonfatalError("Rename failed: " + mFile.getAbsolutePath() + " to "
+					+ newFile.getAbsolutePath());
+		}
 	}
 
 	/**
@@ -301,7 +326,7 @@ public class FileOp
 			// when failed, return false.
 			return false;
 		}
-		if(fileSize(file) > 5242880)
+		if(fileSize(file) > 5242880 || fileTypeString == null)
 		{
 			return false;
 		}
