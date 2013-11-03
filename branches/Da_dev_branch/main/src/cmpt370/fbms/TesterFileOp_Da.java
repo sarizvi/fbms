@@ -43,7 +43,7 @@ public class TesterFileOp_Da extends TestCase
 	/**
 	 * Prepare Test Environment: All temporary item will be created under folder TestFileOp.
 	 * Temporary item: File(s) and Folder(s) for fileSize(Path), fileValid(Path), Copy(Path, Path),
-	 * copy(List<Path>) and for delete(Path)
+	 * Rename(Path, String), copy(List<Path>) and for delete(Path)
 	 * 
 	 */
 	public void setUp()
@@ -127,7 +127,7 @@ public class TesterFileOp_Da extends TestCase
 		assertTrue("fileValid() reported false for small text file.",
 				FileOp.fileValid(new File("TestFileOp\\SmallSize.txt").toPath()));
 
-		assertTrue("fileValid() reported false for large text file.",
+		assertFalse("fileValid() reported true for large text file.",
 				FileOp.fileValid(new File("TestFileOp\\LargeSize.txt").toPath()));
 
 		assertFalse("fileValid() reported true for binary file.",
@@ -157,14 +157,27 @@ public class TesterFileOp_Da extends TestCase
 		sourcePaths.add(new File("TestFileOp\\LargeSize.txt").toPath());
 		sourcePaths.add(new File("TestFileOp\\BinaryFile.bin").toPath());
 
+		Control.backupDirectory = new File("TestFileOp\\Test2\\").toPath();
+		Control.liveDirectory = new File("TestFileOp\\").toPath();
 		FileOp.copy(sourcePaths);
 
 		assertTrue("copy(List<Path>) faild to copy file: TestFileOp\\SmallSize.txt", (new File(
-				"TestFileOp\\Test2\\TestFileOp\\SmallSize.txt")).exists());
+				"TestFileOp\\Test2\\SmallSize.txt")).exists());
 		assertTrue("copy(List<Path>) faild to copy file: TestFileOp\\LargeSize.txt", (new File(
-				"TestFileOp\\Test2\\TestFileOp\\LargeSize.txt")).exists());
+				"TestFileOp\\Test2\\LargeSize.txt")).exists());
 		assertTrue("copy(List<Path>) faild to copy file: TestFileOp\\BinaryFile.bin", (new File(
-				"TestFileOp\\Test2\\TestFileOp\\BinaryFile.bin")).exists());
+				"TestFileOp\\Test2\\BinaryFile.bin")).exists());
+	}
+
+	public void testRename()
+	{
+		FileOp.rename((new File("TestFileOp\\SmallSize.txt")).toPath(), "SmallSize2.txt");
+		assertTrue("TestFileOp\\SmallSize.txt is not renamed to SmallSize2.txt", new File(
+				"TestFileOp\\SmallSize2.txt").exists());
+
+		FileOp.rename((new File("TestFileOp\\SmallSize2.txt")).toPath(), "SmallSize.txt");
+		assertTrue("TestFileOp\\SmallSize2.txt is not renamed to SmallSize.txt", new File(
+				"TestFileOp\\SmallSize.txt").exists());
 	}
 
 	@Override
