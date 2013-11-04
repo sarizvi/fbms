@@ -15,10 +15,14 @@
 
 package cmpt370.fbms;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FileHistory
 {
@@ -95,35 +99,36 @@ public class FileHistory
 
 	public static Path obtainRevision(Path file, long timestamp)
 	{
-		// // Retrieve data from database
-		// List<RevisionInfo> fileRevisionList = DbManager.getRevisionData(file);
-		// LinkedList<RevisionInfo> patchList = new LinkedList<>();
-		//
-		// // Add the records we needed to a linked list
-		// for(RevisionInfo revisionInfo : fileRevisionList)
-		// {
-		// if(revisionInfo.time > timestamp)
-		// {
-		// patchList.add(revisionInfo);
-		// }
-		// }
-		//
-		// // Sort the linked list in reverse order
-		// Collections.sort(patchList);
-		// Collections.reverse(patchList);
-		//
-		// // Copy the newest file to temporary folder
-		// Path newestFile = FileOp.convertPath(file);
-		// FileOp.copy(newestFile, (new File("temp\\")).toPath());
-		//
-		// // Apply diff to the file
-		// File tempPatchFile = new File("temp\\patch.diff");
-		// for(RevisionInfo path : patchList)
-		// {
-		//
-		// FileOp.applyDiff(sourceFile, afterFile);
-		// }
-		//
+		// Retrieve data from database
+		List<RevisionInfo> fileRevisionList = DbManager.getRevisionData(file);
+		LinkedList<RevisionInfo> patchList = new LinkedList<>();
+
+		// Add the records we needed to a linked list
+		for(RevisionInfo revisionInfo : fileRevisionList)
+		{
+			if(revisionInfo.time > timestamp)
+			{
+				patchList.add(revisionInfo);
+			}
+		}
+
+		// Sort the linked list in reverse order
+		Collections.sort(patchList);
+		Collections.reverse(patchList);
+
+		// Copy the newest file to temporary folder
+		Path newestFile = FileOp.convertPath(file);
+		FileOp.copy(newestFile, (new File("temp\\")).toPath());
+
+		// Apply diff to the file
+		Path tempPatchFile = (new File("temp\\patch.diff")).toPath();
+		for(RevisionInfo patch : patchList)
+		{
+			// TODO Discuss design of this FileOp.applyDiff()
+			// FileOp.stringToFile(patch.diff, tempPatchFile);
+			// FileOp.applyDiff(sourceFile, afterFile);
+		}
+
 		return null;
 	}
 

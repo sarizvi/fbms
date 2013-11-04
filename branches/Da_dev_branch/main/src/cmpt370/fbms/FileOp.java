@@ -17,6 +17,8 @@ package cmpt370.fbms;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -34,6 +36,8 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.xml.bind.DatatypeConverter;
 
 public class FileOp
 {
@@ -334,6 +338,30 @@ public class FileOp
 
 		// And encode those bytes as the default character set (eg, UTF 8)
 		return Charset.defaultCharset().decode(ByteBuffer.wrap(encoded)).toString();
+	}
+
+	/**
+	 * A utility function for converting a String to a file. It is a reverse of fileToString(Path
+	 * path).
+	 * 
+	 * @author Archimedes Trajano (edited by dallen) from <http://stackoverflow.com/a/13269584>
+	 * 
+	 * @param s
+	 *            The String to be written to file.
+	 * @param file
+	 *            A Path representing the target file.
+	 * @throws FileNotFoundException
+	 *             from the constructor of FileOutputStream
+	 * @throws IOException
+	 *             from FileOutputStream.write
+	 */
+	public static void stringToFile(String s, Path file) throws FileNotFoundException, IOException
+	{
+		FileOutputStream fo = new FileOutputStream(file.toFile());
+		byte[] bytes = DatatypeConverter.parseHexBinary(s);
+		fo.write(bytes);
+		fo.flush();
+		fo.close();
 	}
 
 	/**
