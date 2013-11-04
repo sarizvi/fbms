@@ -1,20 +1,17 @@
 /*
-	FBMS: File Backup and Management System
-	Copyright (C) 2013 Group 06
-
-	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * FBMS: File Backup and Management System Copyright (C) 2013 Group 06
+ * 
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <http://www.gnu.org/licenses/>.
+ */
 
 package cmpt370.fbms;
 
@@ -69,13 +66,64 @@ public class FileHistory
 		return pathToTempFile;
 	}
 
+	/**
+	 * Store the diff file to database and copy the current file to backup folder.
+	 * 
+	 * @param file
+	 *            the actual file.
+	 * @param diff
+	 *            the diff file.
+	 * @param filesize
+	 *            the old file size.
+	 * @param delta
+	 *            change in file size.
+	 */
 	public static void storeRevision(Path file, Path diff, long filesize, long delta)
 	{
-
+		String diffString = null;
+		try
+		{
+			diffString = FileOp.fileToString(diff);
+			FileOp.copy(file, Control.backupDirectory);
+		}
+		catch(IOException e)
+		{
+			Errors.nonfatalError("Could not store " + diff.toAbsolutePath() + " to database.");
+		}
+		DbManager.insertRevision(file, diffString, delta);
 	}
 
 	public static Path obtainRevision(Path file, long timestamp)
 	{
+		// // Retrieve data from database
+		// List<RevisionInfo> fileRevisionList = DbManager.getRevisionData(file);
+		// LinkedList<RevisionInfo> patchList = new LinkedList<>();
+		//
+		// // Add the records we needed to a linked list
+		// for(RevisionInfo revisionInfo : fileRevisionList)
+		// {
+		// if(revisionInfo.time > timestamp)
+		// {
+		// patchList.add(revisionInfo);
+		// }
+		// }
+		//
+		// // Sort the linked list in reverse order
+		// Collections.sort(patchList);
+		// Collections.reverse(patchList);
+		//
+		// // Copy the newest file to temporary folder
+		// Path newestFile = FileOp.convertPath(file);
+		// FileOp.copy(newestFile, (new File("temp\\")).toPath());
+		//
+		// // Apply diff to the file
+		// File tempPatchFile = new File("temp\\patch.diff");
+		// for(RevisionInfo path : patchList)
+		// {
+		//
+		// FileOp.applyDiff(sourceFile, afterFile);
+		// }
+		//
 		return null;
 	}
 
