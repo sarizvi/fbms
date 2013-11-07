@@ -99,6 +99,8 @@ public class FileHistory
 
 	public static Path obtainRevision(Path file, long timestamp)
 	{
+		// TODO Fully implement this method
+
 		// Retrieve data from database
 		List<RevisionInfo> fileRevisionList = DbManager.getRevisionData(file);
 		LinkedList<RevisionInfo> patchList = new LinkedList<>();
@@ -124,7 +126,7 @@ public class FileHistory
 		Path tempPatchFile = (new File("temp\\patch.diff")).toPath();
 		for(RevisionInfo patch : patchList)
 		{
-			// TODO Discuss design of this FileOp.applyDiff()
+			// TODO Implement FileOp.applyDiff() to have a test
 			// FileOp.stringToFile(patch.diff, tempPatchFile);
 			// FileOp.applyDiff(sourceFile, afterFile);
 		}
