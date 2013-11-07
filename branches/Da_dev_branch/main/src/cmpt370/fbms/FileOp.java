@@ -37,8 +37,6 @@ import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.bind.DatatypeConverter;
-
 public class FileOp
 {
 	/**
@@ -333,18 +331,18 @@ public class FileOp
 	 */
 	public static String fileToString(Path path) throws IOException
 	{
+		FileReader fis = new FileReader(path.toFile());
+
 		// Read the file as raw bytes
 		byte[] encoded = Files.readAllBytes(path);
-
+		System.out.println(fis.getEncoding());
 		// And encode those bytes as the default character set (eg, UTF 8)
-		return Charset.defaultCharset().decode(ByteBuffer.wrap(encoded)).toString();
+		return Charset.forName("utf-8").decode(ByteBuffer.wrap(encoded)).toString();
 	}
 
 	/**
 	 * A utility function for converting a String to a file. It is a reverse of fileToString(Path
 	 * path).
-	 * 
-	 * @author Archimedes Trajano (edited by dallen) from <http://stackoverflow.com/a/13269584>
 	 * 
 	 * @param s
 	 *            The String to be written to file.
@@ -358,7 +356,7 @@ public class FileOp
 	public static void stringToFile(String s, Path file) throws FileNotFoundException, IOException
 	{
 		FileOutputStream fo = new FileOutputStream(file.toFile());
-		byte[] bytes = DatatypeConverter.parseHexBinary(s);
+		byte[] bytes = s.getBytes(Charset.forName("utf-8"));
 		fo.write(bytes);
 		fo.flush();
 		fo.close();
