@@ -331,11 +331,9 @@ public class FileOp
 	 */
 	public static String fileToString(Path path) throws IOException
 	{
-		FileReader fis = new FileReader(path.toFile());
-
 		// Read the file as raw bytes
 		byte[] encoded = Files.readAllBytes(path);
-		System.out.println(fis.getEncoding());
+
 		// And encode those bytes as the default character set (eg, UTF 8)
 		return Charset.forName("utf-8").decode(ByteBuffer.wrap(encoded)).toString();
 	}
