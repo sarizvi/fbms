@@ -5,28 +5,126 @@
   * Da Tao - dat293
   * Michael Butler - mdb815
 
+*@ALL: Read and do the "TODO"s*
+
 ==1 - System operations==
-TODO: Are system operations things like copy file, create diff, insert revision, etc? Or are they like methods such as FileOp.copy(), FileHistory.obtainRevision(), etc?
+*TODO:* Are system operations things like copy file, create diff, insert revision, etc? Or are they like methods such as FileOp.copy(), FileHistory.obtainRevision(), etc?
 
 ==2 - Sequence diagrams of major system operations==
-TODO: Requires answer to #1.
+*TODO:* Requires answer to #1.
 
 ==3 - Class diagram==
 http://i.imgur.com/djttcm8.png
 
-Improve me! Learn more about class diagrams and suggest changes, error corrections, etc.
+*TODO:* Improve me! Learn more about class diagrams and suggest changes, error corrections, etc.
 
-TODO: Point out at least three GRASP patterns in this class diagram (after the above diagram is improved).
+*TODO:* Point out at least three GRASP patterns in this class diagram (after the above diagram is improved).
 
 ==4 - Implementation==
 ===Instruction manual===
-TODO: Pretty straight forward. Needs pictures, too.
+FBMS, or the File Backup and Management System, works akin to an offline Dropbox or Google Drive. When the program is started for the first time, a wizard will guide you through selecting your live and backup directories.
+
+  * *Live directory*: The folder that you want to keep backed up and revisioned.
+  * *Backup directory*: The location to store the backup. Don't use an existing folder, or you risk losing your files.
+
+Once folders are chosen and the wizard is completed, the program will run quietly in the background. An icon will be created on the system tray. Double clicking this icon will open the program's interface.
+
+The interface shows a special file browser, which displays the contents of the backup directory along with information such as the number of revisions stored. This file browser can be navigated with the keyboard or a mouse, and has functionality similar to other file browsers, such as Windows Explorer or Dolphin. It is, however, a specialized browser intended only to be able to restore files and view revisions.
+
+Double clicking a file will open the revisions dialog, displaying a list of past revisions (if there are any). These revisions can be viewed (which opens the revision in your default program) or reverted (which sets that file in your live directory to the specified revision). You can also view the changes introduced by a revision, which will open in your default web browser.
+
+The file browser is also able to:
+
+  * Copy the selected file to a chosen folder
+  * Restore all files
+  * Change the live or backup directory
+
+FBMS is also able to detect when files have changed since the last time you ran the program. When starting the program up, FBMS will perform a one time scan for file changes. This scan is slow, and can be disabled in the settings if FBMS is always running.
+
+The settings dialog is accessed under the File menu of the GUI. It provides a few choices such as:
+
+  * Whether or not to display non-fatal error messages (which don't stop the program from running, but notify the user of issues).
+  * Whether or not to run the previously mentioned first run scan
+  * Whether or not to enable the trim feature, which removes revisions older than a specified date.
+
+*TODO:* Needs pictures.
 
 ===Meetings===
-TODO: Just meetings since M4. Not many.
+|| *Date* || *Attendance* || *Discussion* ||
+|| 29 October || Mike, Da || Discussed progress of project and others' work; Handling of binary files ||
+|| 2 November || Mike, Ahsen || Optional meeting for implementation; GUI design; GUI file browser table; Taskbar icons ||
+|| 4 November || Mike, Ahsen, Hattan || Personal meeting for development of GUI and file diff system ||
+|| 5 November || All || Minor implementation; testing; GUI revision table; Obtaining specific revisions; Handling file changes; Settings dialog ||
+|| 9 November || Mike, Da, Ahsen || Optional meeting for implementation; GUI wrap-up; bug handling; testing; Milestone 5 plans; Milestone 4 review; Non-backwards compatible changes; Logging ||
+
+As with before, scheduling meetings is very difficult due to the very full and very different schedules of the group members. We had optional integration meetups on Saturdays in Spinks, which were mostly a way to get everyone coding with easy access to their group members.
+
+The majority of communication stems from email contact. We've exchanged well over 100 emails since.
 
 ===SVN log===
-TODO: Find out if this is supposed to be here (doesn't say so in #6) or in a separate text file or what.
+*TODO:* Find out if this is supposed to be here (doesn't say so in #6) or in a separate text file or what.
 
 ==5 - Project plan listing==
-TODO: Include table of time spent on project and ongoing assignments
+===Spent time===
+<pre>
+    Mike:
+        - Planning and documentation:   5 hours
+        - Milestones:                  12 hours
+        - Utility demo:                 8 hours
+        - Skeleton implemention and
+          PoD classes:                  2 hours
+        - Watcher class:                1 hour
+        - DbManager.init():             3 hours
+        - FirstRunWizard class:         6 hours
+        - Data.getFolderContents():     2 hours
+        - Various Control code related
+          to startup:                   5 hours
+        - JUnit testing code:           4 hours
+        - Errors class:                 3 hours
+        - MainFrame table:              5 hours
+        - MainMenu functionality:       2 hours
+        - MainMenu functionality:       2 hours
+        - MainToolBar functionality:    1 hour
+        - RevisionDialog table:         2 hours
+        - SettingsDialog:               3 hours
+        - Redid FileOp.createPatch and
+          FileOp.applyPatch:            2 hours
+        - Data.getTableData and
+          Data.getRevisionData:         3 hours
+        - Data number formatting:       1 hour
+        - Trim database feature:        3 hours
+        - FileOp utility functions:     2 hours
+        - Miscellaneous bug fixes:      2 hours
+                                Total: 79 hours
+    Da:
+        - Rough design of modules:      1 hour
+        - Rough design of functions:    1 hour
+        - Work on previous milestones:  4 hours
+        - Work on FileOp:               6 hours
+        - Milestone 4(text):            5 hours
+        - Milestone 4(graph)(WIP):      1 hours
+        - Test case:                    2 hours
+                               Total:  23 hours
+    Ahsen:  
+        -Milestone 4 (documentation):   5 hours
+        -Frontend implementation:       4 hours
+                                 Total: 9 hours
+    Hattan:
+        -Milestones                     9 hours
+        -Work on Presentation slides    3 hours
+                               Total:  11 hours
+    Michael:
+        - Milestones:                   4 hours
+        - getConfig():                  3 hours
+        - setConfig():                  3 hours
+                               Total:  10 hours
+</pre>
+
+*TODO:* Add your time to the table above. Note that columns must be SPACE INDENTED to ensure proper formatting. I copied what we had in M4. Fill in what you've done since.
+
+===Future assignments===
+At this point of time, the program is largely completed in terms of functionality. There is much testing, quality assurance, and bug fixing to do, however.
+
+In particular, Michael needs to work out some kinks in his implementation of the file handlers, Hattan and Ahsen need to heavily test the program, Da needs to prepare the program for distribution (as a JAR and with scripts for ease of running), and Mike needs to improve the handling of binary files.
+
+*TODO:* Make any necessary changes between now and submission time.
