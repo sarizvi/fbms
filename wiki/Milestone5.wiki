@@ -1,0 +1,32 @@
+=Milestone 4: Updated Design and Near-Complete Implementation=
+  * Mike Hoffert - mlh374
+  * Syed Ahsan Rizvi - sar457
+  * Hattan Alsharif - haa775
+  * Da Tao - dat293
+  * Michael Butler - mdb815
+
+==1 - System operations==
+TODO: Are system operations things like copy file, create diff, insert revision, etc? Or are they like methods such as FileOp.copy(), FileHistory.obtainRevision(), etc?
+
+==2 - Sequence diagrams of major system operations==
+TODO: Requires answer to #1.
+
+==3 - Class diagram==
+http://i.imgur.com/djttcm8.png
+
+Improve me! Learn more about class diagrams and suggest changes, error corrections, etc.
+
+TODO: Point out at least three GRASP patterns in this class diagram (after the above diagram is improved).
+
+==4 - Implementation==
+===Instruction manual===
+TODO: Pretty straight forward. Needs pictures, too.
+
+===Meetings===
+TODO: Just meetings since M4. Not many.
+
+===SVN log===
+TODO: Find out if this is supposed to be here (doesn't say so in #6) or in a separate text file or what.
+
+==5 - Project plan listing==
+TODO: Include table of time spent on project and ongoing assignments
