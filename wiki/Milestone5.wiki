@@ -113,7 +113,11 @@ The SVN log is located in the included file, `svn_log.txt`.
     Ahsen:  
         -Milestone 4 (documentation):   5 hours
         -Frontend implementation:       4 hours
-                                 Total: 9 hours
+        -GUI Brain storm(in total):     7 hours
+        -GUI implementation:           10 hours
+        -Testing(so far)                 2 hours
+
+                                 Total: 28 hours
     Hattan:
         -Milestones:                    9 hours
         -Work on Presentation slides:   3 hours
