@@ -8,6 +8,8 @@
 *@ALL: Read and do the "TODO"s*
 
 ==1 - System operations==
+System events triggered by the user!!
+refer to slide 39 and 41 ElaborationPhasesGRASP
 *TODO:* Are system operations things like copy file, create diff, insert revision, etc? Or are they like methods such as FileOp.copy(), FileHistory.obtainRevision(), etc?
 
 ==2 - Sequence diagrams of major system operations==
