@@ -102,11 +102,14 @@ The SVN log is located in the included file, `svn_log.txt`.
         - Rough design of modules:      1 hour
         - Rough design of functions:    1 hour
         - Work on previous milestones:  4 hours
-        - Work on FileOp:               6 hours
+        - Work on FileOp:               7 hours
         - Milestone 4(text):            5 hours
-        - Milestone 4(graph)(WIP):      1 hours
+        - Milestone 4(graph):           2 hours
         - Test case:                    2 hours
-                               Total:  23 hours
+        - Work on FileHistory:          6 hours
+        - Miscellaneous bug fixes:      2 hours
+        - Build.xml:                    4 hours
+                               Total:  33 hours
     Ahsen:  
         -Milestone 4 (documentation):   5 hours
         -Frontend implementation:       4 hours
