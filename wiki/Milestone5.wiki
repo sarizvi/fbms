@@ -110,8 +110,9 @@ The SVN log is located in the included file, `svn_log.txt`.
         - Test case:                    2 hours
         - Work on FileHistory:          6 hours
         - Miscellaneous bug fixes:      2 hours
+        - Redo operation contracts:     1 hour
         - Build.xml:                    4 hours
-                               Total:  33 hours
+                               Total:  34 hours
     Ahsen:  
         -Milestone 4 (documentation):   5 hours
         -Frontend implementation:       4 hours
