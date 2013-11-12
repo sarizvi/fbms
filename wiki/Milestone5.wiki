@@ -115,9 +115,15 @@ The SVN log is located in the included file, `svn_log.txt`.
         -Frontend implementation:       4 hours
                                  Total: 9 hours
     Hattan:
-        -Milestones                     9 hours
-        -Work on Presentation slides    3 hours
-                               Total:  11 hours
+        -Milestones:                               9 hours
+        -Work on Presentation slides:     3 hours
+        - FileOp.creatDiff:                      4 hours
+        - FileOp.fileToList:                     4 hours 
+        - Test FileOp.creatDiff:              2 hours
+        - Test FileOp.fileToList:              3 hours 
+        - FileOp.applayDiff:                   6 hours
+        
+                               Total:  31 hours
     Michael:
         - Milestones:                   4 hours
         - getConfig():                  3 hours
