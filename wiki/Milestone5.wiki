@@ -8,17 +8,32 @@
 *@ALL: Read and do the "TODO"s*
 
 ==1 - System operations==
-System events triggered by the user!!
-refer to slide 39 and 41 ElaborationPhasesGRASP
-*TODO:* Are system operations things like copy file, create diff, insert revision, etc? Or are they like methods such as FileOp.copy(), FileHistory.obtainRevision(), etc?
+  * Startup.resolveBackupDirectory()
+  * DbManager.setConfig()
+  * FileOp.createPatch()
+  * FileOp.applyPatch()
+  * GuiController.revertRevision()
+  * GuiController.viewRevision()
+  * GuiController.changeLiveDirectory()
+  * GuiController.changeBackupDirectory()
+  * FileHandlers.handleRenamedFiles()
+  * FileHandlers.handleCreatedFiles()
+  * FileHandlers.handleModifiedFiles()
+  * FileHandlers.handleDeletedFiles()
 
 ==2 - Sequence diagrams of major system operations==
-*TODO:* Requires answer to #1.
+  * Mike: FileHandlers.handleRenamedFiles()
+  * Michael: FileHandlers.handleModifiedFiles()
+  * Da: FileHandlers.handleCreatedFiles()
+  * Hattan: FileHandlers.handleDeletedFiles()
+  * Ahsen: GuiController.revertRevision()
 
 ==3 - Class diagram==
-http://i.imgur.com/djttcm8.png
+The class diagram is located in the "class_diagram.png" file.
 
-*TODO:* Improve me! Learn more about class diagrams and suggest changes, error corrections, etc.
+*TODO:* Include the actual class diagram file (in trunk/doc/uml)
+
+*TODO:* Improve the diagram
 
 *TODO:* Point out at least three GRASP patterns in this class diagram (after the above diagram is improved).
 
@@ -49,7 +64,7 @@ The settings dialog is accessed under the File menu of the GUI. It provides a fe
   * Whether or not to run the previously mentioned first run scan
   * Whether or not to enable the trim feature, which removes revisions older than a specified date.
 
-*TODO:* Needs pictures.
+*TODO:* Add pictures.
 
 ===Meetings===
 || *Date* || *Attendance* || *Discussion* ||
