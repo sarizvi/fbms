@@ -25,7 +25,7 @@
   * Mike: FileHandlers.handleRenamedFiles()
   * Michael: FileHandlers.handleModifiedFiles()
 ===FileHandlers.handleCreatedFiles()<sup>(Tao)</sup>===
-https://fbms.googlecode.com/svn-history/r352/trunk/doc/uml/handleCreatedFiles.png
+https://fbms.googlecode.com/svn-history/r353/trunk/doc/uml/handleCreatedFiles.png
   * Hattan: FileHandlers.handleDeletedFiles()
   * Ahsen: GuiController.revertRevision()
 
@@ -128,8 +128,8 @@ The SVN log is located in the included file, `svn_log.txt`.
         - Miscellaneous bug fixes:      2 hours
         - Redo operation contracts:     1 hour
         - Build.xml:                    4 hours
-        - Milestone 5(graph):           3 hours
-                               Total:  37 hours
+        - Milestone 5(graph):           5 hours
+                               Total:  39 hours
     Ahsen:  
         -Milestone 4 (documentation):   5 hours
         -Frontend implementation:       4 hours
