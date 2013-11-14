@@ -16,18 +16,26 @@
   * GuiController.viewRevision()
   * GuiController.changeLiveDirectory()
   * GuiController.changeBackupDirectory()
-  * FileHandlers.handleRenamedFiles()
-  * FileHandlers.handleCreatedFiles()
-  * FileHandlers.handleModifiedFiles()
-  * FileHandlers.handleDeletedFiles()
+  * FileChangeHandlers.handleRenamedFiles()
+  * FileChangeHandlers.handleCreatedFiles()
+  * FileChangeHandlers.handleModifiedFiles()
+  * FileChangeHandlers.handleDeletedFiles()
 
 ==2 - Sequence diagrams of major system operations==
-  * Mike: FileHandlers.handleRenamedFiles()
-  * Michael: FileHandlers.handleModifiedFiles()
-===FileHandlers.handleCreatedFiles()<sup>(Tao)</sup>===
+===FileChangeHandlers.handleModifiedFiles()<sup>(Buttler)</sup>===
+*TODO:* Do me!
+
+===FileChangeHandlers.handleRenamedFiles()<sup>(Hoffert)</sup>===
+https://fbms.googlecode.com/svn-history/r357/trunk/doc/uml/fileChangeHandlerHandleRenamedFiles.png
+
+===FileChangeHandlers.handleCreatedFiles()<sup>(Tao)</sup>===
 https://fbms.googlecode.com/svn-history/r353/trunk/doc/uml/handleCreatedFiles.png
-  * Hattan: FileHandlers.handleDeletedFiles()
-  * Ahsen: GuiController.revertRevision()
+
+===FileChangeHandlers.handleDeletedFiles()<sup>(Alsharif)</sup>===
+*TODO:* Do me!
+
+===GuiController.revertRevision()<sup>(Rizvi)</sup>===
+*TODO:* Do me!
 
 ==3 - Class diagram==
 The class diagram is located in the "class_diagram.png" file.
@@ -36,7 +44,13 @@ The class diagram is located in the "class_diagram.png" file.
 
 *TODO:* Improve the diagram
 
-*TODO:* Point out at least three GRASP patterns in this class diagram (after the above diagram is improved).
+Used GRASP patterns include:
+
+  * The use of a GuiController class as a controller to handle system functionality for the front end.
+  * The FileHistory class performs gets and sets the file history (its revisions), acting in a high cohension way: it's focused on dealing with file history and leaves everything else to the other classes (in particular, it uses FileOp to perform operations such as creating the patch files that are the heart of revisions).
+  * The FileOp class is very low coupling. With the exception of getting the live and backup directory from Main (which most of the classes do), FileOp has no dependencies and works on its own as a low end collection of utility methods.
+
+*TODO:* Moar GRASP patterns!
 
 ==4 - Implementation==
 ===Instruction manual===
@@ -74,6 +88,7 @@ The settings dialog is accessed under the File menu of the GUI. It provides a fe
 || 4 November || Mike, Ahsen, Hattan || Personal meeting for development of GUI and file diff system ||
 || 5 November || All || Minor implementation; testing; GUI revision table; Obtaining specific revisions; Handling file changes; Settings dialog ||
 || 9 November || Mike, Da, Ahsen || Optional meeting for implementation; GUI wrap-up; bug handling; testing; Milestone 5 plans; Milestone 4 review; Non-backwards compatible changes; Logging ||
+|| 12 November || Mike, Da, Ahsen || Optional meeting for milestone 5; testing results ||
 
 As with before, scheduling meetings is very difficult due to the very full and very different schedules of the group members. We had optional integration meetups on Saturdays in Spinks, which were mostly a way to get everyone coding with easy access to their group members.
 
@@ -89,7 +104,7 @@ The SVN log is located in the included file, `svn_log.txt`.
 <pre>
     Mike:
         - Planning and documentation:   5 hours
-        - Milestones:                  12 hours
+        - Milestones:                  14 hours
         - Utility demo:                 8 hours
         - Skeleton implemention and
           PoD classes:                  2 hours
@@ -115,7 +130,7 @@ The SVN log is located in the included file, `svn_log.txt`.
         - Trim database feature:        3 hours
         - FileOp utility functions:     2 hours
         - Miscellaneous bug fixes:      2 hours
-                                Total: 79 hours
+                                Total: 81 hours
     Da:
         - Rough design of modules:      1 hour
         - Rough design of functions:    1 hour
