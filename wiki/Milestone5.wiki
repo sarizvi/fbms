@@ -24,7 +24,8 @@
 ==2 - Sequence diagrams of major system operations==
   * Mike: FileHandlers.handleRenamedFiles()
   * Michael: FileHandlers.handleModifiedFiles()
-  * Da: FileHandlers.handleCreatedFiles()
+===FileHandlers.handleCreatedFiles()<sup>(Tao)</sup>===
+https://fbms.googlecode.com/svn-history/r352/trunk/doc/uml/handleCreatedFiles.png
   * Hattan: FileHandlers.handleDeletedFiles()
   * Ahsen: GuiController.revertRevision()
 
