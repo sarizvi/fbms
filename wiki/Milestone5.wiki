@@ -32,7 +32,7 @@ https://fbms.googlecode.com/svn-history/r357/trunk/doc/uml/fileChangeHandlerHand
 https://fbms.googlecode.com/svn-history/r353/trunk/doc/uml/handleCreatedFiles.png
 
 ===FileChangeHandlers.handleDeletedFiles()<sup>(Alsharif)</sup>===
-*TODO:* Do me!
+https://fbms.googlecode.com/svn/trunk/doc/uml/handleDeletedFiles.png
 
 ===GuiController.revertRevision()<sup>(Rizvi)</sup>===
 *TODO:* Do me!
