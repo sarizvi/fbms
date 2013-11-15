@@ -168,9 +168,9 @@ The SVN log is located in the included file, `svn_log.txt`.
         -Frontend implementation:       4 hours
         -GUI Brain storm(in total):     7 hours
         -GUI implementation:           10 hours
-        -Testing(so far):               2 hours
+        -Testing:                       3 hours
         -Milestones:                    5 hours
-                                 Total: 33 hours
+                                 Total: 34 hours
     Hattan:
         - Milestone 4:                  9 hours
         - Work on Presentation slides:  3 hours
