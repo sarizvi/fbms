@@ -51,6 +51,8 @@ Used GRASP patterns include:
   * The FileHistory class performs gets and sets the file history (its revisions), acting in a high cohension way: it's focused on dealing with file history and leaves everything else to the other classes (in particular, it uses FileOp to perform operations such as creating the patch files that are the heart of revisions).
   * The FileOp class is very low coupling. With the exception of getting the live and backup directory from Main (which most of the classes do), FileOp has no dependencies and works on its own as a low end collection of utility methods
   * Most of the classes like  FileChangHandlers,GuiController,DatRetriever make use of the principle of Polymorphism as they use Polymorphic operations which operate on different classes.
+  * DbManager is a class that provides high cohesion for database access while having low coupling to the rest of our program. By consolidating those functions interacting with the database into one class we avoid unnecessary coupling to the database itself while providing robust SQL interaction. 
+
 *TODO:* Moar GRASP patterns!
 
 ==4 - Implementation==
