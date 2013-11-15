@@ -179,8 +179,9 @@ The SVN log is located in the included file, `svn_log.txt`.
         - Test FileOp.fileToList:       3 hours 
         - FileOp.applayDiff:            6 hours
         - Milestone 5:                  4 hours
+        - Instruction manual pics:      2 hours
         
-                               Total:  35 hours
+                               Total:  37 hours
     Michael:
         - Milestones:                   8 hours
         - getConfig():                  3 hours
