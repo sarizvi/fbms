@@ -36,11 +36,11 @@ http://i.imgur.com/IFQ8MuX.png
 https://fbms.googlecode.com/svn/trunk/doc/uml/revertRevision.png
 
 ==3 - Class diagram==
-The class diagram is located in the included "class_diagram.png" file.
+The class diagram is located in the included `class_diagram.png` file.
 
 Used GRASP patterns include:
 
-  * The use of a GuiController class as a controller to handle system functionality for the front end.
+  * The use of a `GuiController` class as a controller to handle system functionality for the front end.
   * The `FileChangeHandlers` class also acts as a controller as it handles System events which are then delegated to other classes.
   * The `FileHistory` class performs gets and sets the file history (its revisions), acting in a high cohesion way: it's focused on dealing with file history and leaves everything else to the other classes (in particular, it uses `FileOp` to perform operations such as creating the patch files that are the heart of revisions).
   * The `FileOp` class is very low coupling. With the exception of getting the live and backup directory from `Main` (which most of the classes do), `FileOp` has no dependencies and works on its own as a low end collection of utility methods
