@@ -38,7 +38,7 @@ https://fbms.googlecode.com/svn/trunk/doc/uml/handleDeletedFiles.png
 https://fbms.googlecode.com/svn/trunk/doc/uml/revertRevision.png
 
 ==3 - Class diagram==
-https://fbms.googlecode.com/svn/trunk/doc/uml/class_Diagram.png
+https://fbms.googlecode.com/svn/trunk/doc/uml/class_diagram.png
 The class diagram is located in the "class_diagram.png" file.
 
 *TODO:* Include the actual class diagram file (in trunk/doc/uml)
