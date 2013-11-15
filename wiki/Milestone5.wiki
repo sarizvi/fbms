@@ -5,8 +5,6 @@
   * Da Tao - dat293
   * Michael Butler - mdb815
 
-*@ALL: Read and do the "TODO"s*
-
 ==1 - System operations==
   * Startup.resolveBackupDirectory()
   * DbManager.setConfig()
@@ -32,40 +30,45 @@ https://fbms.googlecode.com/svn-history/r357/trunk/doc/uml/fileChangeHandlerHand
 https://fbms.googlecode.com/svn-history/r353/trunk/doc/uml/handleCreatedFiles.png
 
 ===FileChangeHandlers.handleDeletedFiles()<sup>(Alsharif)</sup>===
-https://fbms.googlecode.com/svn/trunk/doc/uml/handleDeletedFiles.png
+http://i.imgur.com/IFQ8MuX.png
 
 ===GuiController.revertRevision()<sup>(Rizvi)</sup>===
 https://fbms.googlecode.com/svn/trunk/doc/uml/revertRevision.png
 
 ==3 - Class diagram==
-https://fbms.googlecode.com/svn/trunk/doc/uml/class_diagram.png
-The class diagram is located in the "class_diagram.png" file.
-
-*TODO:* Include the actual class diagram file (in trunk/doc/uml)
-
-*TODO:* Improve the diagram
+The class diagram is located in the included "class_diagram.png" file.
 
 Used GRASP patterns include:
 
   * The use of a GuiController class as a controller to handle system functionality for the front end.
-  * The FileChangeHandlers class also acts as a controller as it handles System events which are then delegated to other classes.
-  * The FileHistory class performs gets and sets the file history (its revisions), acting in a high cohension way: it's focused on dealing with file history and leaves everything else to the other classes (in particular, it uses FileOp to perform operations such as creating the patch files that are the heart of revisions).
-  * The FileOp class is very low coupling. With the exception of getting the live and backup directory from Main (which most of the classes do), FileOp has no dependencies and works on its own as a low end collection of utility methods
-  * Most of the classes like  FileChangHandlers,GuiController,DatRetriever make use of the principle of Polymorphism as they use Polymorphic operations which operate on different classes.
-  * DbManager is a class that provides high cohesion for database access while having low coupling to the rest of our program. By consolidating those functions interacting with the database into one class we avoid unnecessary coupling to the database itself while providing robust SQL interaction. 
-
-*TODO:* Moar GRASP patterns!
+  * The `FileChangeHandlers` class also acts as a controller as it handles System events which are then delegated to other classes.
+  * The `FileHistory` class performs gets and sets the file history (its revisions), acting in a high cohesion way: it's focused on dealing with file history and leaves everything else to the other classes (in particular, it uses `FileOp` to perform operations such as creating the patch files that are the heart of revisions).
+  * The `FileOp` class is very low coupling. With the exception of getting the live and backup directory from `Main` (which most of the classes do), `FileOp` has no dependencies and works on its own as a low end collection of utility methods
+  * Most of the classes like `FileChangeHandlers`, `GuiController`, and `DataRetriever` make use of the principle of polymorphism as they operate on interfaces, encapsulating the internal implementation of the objects.
+  * `DbManager` is a class that provides high cohesion for database access while having low coupling to the rest of our program. By consolidating those functions interacting with the database into one class we avoid unnecessary coupling to the database itself while providing robust SQL interaction. 
 
 ==4 - Implementation==
 ===Instruction manual===
 FBMS, or the File Backup and Management System, works akin to an offline Dropbox or Google Drive. When the program is started for the first time, a wizard will guide you through selecting your live and backup directories.
 
+http://i.imgur.com/sK9r5Yv.png
+
   * *Live directory*: The folder that you want to keep backed up and revisioned.
   * *Backup directory*: The location to store the backup. Don't use an existing folder, or you risk losing your files.
 
+http://i.imgur.com/QPGdlmZ.png
+
+http://i.imgur.com/ddN8nNm.png
+
 Once folders are chosen and the wizard is completed, the program will run quietly in the background. An icon will be created on the system tray. Double clicking this icon will open the program's interface.
 
+http://i.imgur.com/ATSvU6S.png
+
+http://i.imgur.com/q9oumYv.png
+
 The interface shows a special file browser, which displays the contents of the backup directory along with information such as the number of revisions stored. This file browser can be navigated with the keyboard or a mouse, and has functionality similar to other file browsers, such as Windows Explorer or Dolphin. It is, however, a specialized browser intended only to be able to restore files and view revisions.
+
+http://i.imgur.com/T383die.png
 
 Double clicking a file will open the revisions dialog, displaying a list of past revisions (if there are any). These revisions can be viewed (which opens the revision in your default program) or reverted (which sets that file in your live directory to the specified revision). You can also view the changes introduced by a revision, which will open in your default web browser.
 
@@ -82,27 +85,6 @@ The settings dialog is accessed under the File menu of the GUI. It provides a fe
   * Whether or not to display non-fatal error messages (which don't stop the program from running, but notify the user of issues).
   * Whether or not to run the previously mentioned first run scan
   * Whether or not to enable the trim feature, which removes revisions older than a specified date.
-
-
-https://fbms.googlecode.com/svn/trunk/doc/sysimages/1-firstLook.png
-
-https://fbms.googlecode.com/svn/trunk/doc/sysimages/2-ChoosingNewOrExsiting2.png
-
-https://fbms.googlecode.com/svn/trunk/doc/sysimages/3-ChoosingDirectories.png
-
-https://fbms.googlecode.com/svn/trunk/doc/sysimages/4-selectDirectory.png
-
-https://fbms.googlecode.com/svn/trunk/doc/sysimages/5-import%20exsting.png
-
-https://fbms.googlecode.com/svn/trunk/doc/sysimages/6-start.png
-
-https://fbms.googlecode.com/svn/trunk/doc/sysimages/7-systemIcon.png
-
-https://fbms.googlecode.com/svn/trunk/doc/sysimages/8-Interface.png
-
-https://fbms.googlecode.com/svn/trunk/doc/sysimages/9-list.png
-
-
 
 ===Meetings===
 || *Date* || *Attendance* || *Discussion* ||
@@ -173,7 +155,7 @@ The SVN log is located in the included file, `svn_log.txt`.
         -GUI implementation:           10 hours
         -Testing:                       3 hours
         -Milestones:                    9 hours
-                                 Total: 38 hours
+                                Total: 38 hours
     Hattan:
         - Milestone 4:                  9 hours
         - Work on Presentation slides:  3 hours
@@ -200,11 +182,7 @@ The SVN log is located in the included file, `svn_log.txt`.
                                Total:  37 hours
 </pre>
 
-*TODO:* Add your time to the table above. Note that columns must be SPACE INDENTED to ensure proper formatting. I copied what we had in M4. Fill in what you've done since.
-
 ===Future assignments===
 At this point of time, the program is largely completed in terms of functionality. There is much testing, quality assurance, and bug fixing to do, however.
 
-In particular, Michael needs to work out some kinks in his implementation of the file handlers, Hattan and Ahsen need to heavily test the program, Da needs to prepare the program for distribution (as a JAR and with scripts for ease of running), and Mike needs to improve the handling of binary files.
-
-*TODO:* Make any necessary changes between now and submission time.
+We've tagged a stable version as version 1.0. We're currently working on improving MIME type detection, revisioning of binary files, and making the system more object orientated.
