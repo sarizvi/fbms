@@ -35,7 +35,7 @@ https://fbms.googlecode.com/svn-history/r353/trunk/doc/uml/handleCreatedFiles.pn
 https://fbms.googlecode.com/svn/trunk/doc/uml/handleDeletedFiles.png
 
 ===GuiController.revertRevision()<sup>(Rizvi)</sup>===
-http://imgur.com/zwhlGax
+https://fbms.googlecode.com/svn/trunk/doc/uml/revertRevision.png
 
 ==3 - Class diagram==
 The class diagram is located in the "class_diagram.png" file.
