@@ -97,8 +97,6 @@ The majority of communication stems from email contact. We've exchanged well ove
 ===SVN log===
 The SVN log is located in the included file, `svn_log.txt`.
 
-*TODO:* Actually create the svn_log.txt file. `svn log > svn_log.txt` (should also wrap lines. In sublime text, set the line wrap to 100, select all, and use hotkey alt + q; package wrap plus recommended).
-
 ==5 - Project plan listing==
 ===Spent time===
 <pre>
