@@ -51,14 +51,16 @@ Used GRASP patterns include:
 ===Instruction manual===
 FBMS, or the File Backup and Management System, works akin to an offline Dropbox or Google Drive. When the program is started for the first time, a wizard will guide you through selecting your live and backup directories.
 
-http://i.imgur.com/sK9r5Yv.png
+http://i.imgur.com/lkS8hL5.png
 
   * *Live directory*: The folder that you want to keep backed up and revisioned.
   * *Backup directory*: The location to store the backup. Don't use an existing folder, or you risk losing your files.
+  
+You can opt to start from scratch (specifying a backup and live directory), or import an existing backup directory (which will determine the live directory from previously saved settings).
 
-http://i.imgur.com/QPGdlmZ.png
+http://i.imgur.com/QZ2jGjR.png
 
-http://i.imgur.com/ddN8nNm.png
+http://i.imgur.com/eCAmmkX.png
 
 Once folders are chosen and the wizard is completed, the program will run quietly in the background. An icon will be created on the system tray. Double clicking this icon will open the program's interface.
 
