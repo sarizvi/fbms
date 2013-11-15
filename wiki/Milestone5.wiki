@@ -164,10 +164,17 @@ The SVN log is located in the included file, `svn_log.txt`.
         
                                Total:  31 hours
     Michael:
-        - Milestones:                   4 hours
+        - Milestones:                   6 hours
         - getConfig():                  3 hours
         - setConfig():                  3 hours
-                               Total:  10 hours
+        - handleCreatedFiles():         6 hours
+        - handleDeletedFiles():         2 hours
+        - handleModifiedFiles():        4 hours
+        - handleRenamedFiles():         3 hours
+        - testing(general):             4 hours
+        - debugging/optimization():     4 hours
+
+                               Total:  35 hours
 </pre>
 
 *TODO:* Add your time to the table above. Note that columns must be SPACE INDENTED to ensure proper formatting. I copied what we had in M4. Fill in what you've done since.
