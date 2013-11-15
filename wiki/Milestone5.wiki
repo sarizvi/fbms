@@ -79,7 +79,26 @@ The settings dialog is accessed under the File menu of the GUI. It provides a fe
   * Whether or not to run the previously mentioned first run scan
   * Whether or not to enable the trim feature, which removes revisions older than a specified date.
 
-*TODO:* Add pictures.
+
+https://fbms.googlecode.com/svn/trunk/doc/sysimages/1-firstLook.png
+
+https://fbms.googlecode.com/svn/trunk/doc/sysimages/2-ChoosingNewOrExsiting.png
+
+https://fbms.googlecode.com/svn/trunk/doc/sysimages/3-ChoosingDirectories.png
+
+https://fbms.googlecode.com/svn/trunk/doc/sysimages/4-selectDirectory.png
+
+https://fbms.googlecode.com/svn/trunk/doc/sysimages/5-import%20exsting.png
+
+https://fbms.googlecode.com/svn/trunk/doc/sysimages/6-start.png
+
+https://fbms.googlecode.com/svn/trunk/doc/sysimages/7-systemIcon.png
+
+https://fbms.googlecode.com/svn/trunk/doc/sysimages/8-Interface.png
+
+https://fbms.googlecode.com/svn/trunk/doc/sysimages/9-list.png
+
+
 
 ===Meetings===
 || *Date* || *Attendance* || *Discussion* ||
