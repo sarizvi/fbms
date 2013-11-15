@@ -85,7 +85,7 @@ The settings dialog is accessed under the File menu of the GUI. It provides a fe
 
 https://fbms.googlecode.com/svn/trunk/doc/sysimages/1-firstLook.png
 
-https://fbms.googlecode.com/svn/trunk/doc/sysimages/2-ChoosingNewOrExsiting.png
+https://fbms.googlecode.com/svn/trunk/doc/sysimages/2-ChoosingNewOrExsiting2.png
 
 https://fbms.googlecode.com/svn/trunk/doc/sysimages/3-ChoosingDirectories.png
 
