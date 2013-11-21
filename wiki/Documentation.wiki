@@ -8,6 +8,7 @@ This page links to all documentation concerning FBMS.
   * *Milestone 2*: [https://code.google.com/p/fbms/wiki/EarlyProjectProposal Early Project Proposal]
   * *Milestone 3*: [https://code.google.com/p/fbms/wiki/FinalProjectProposal Final Project Proposal]
   * *Milestone 4*: [https://code.google.com/p/fbms/wiki/Milestone4 Requirements and preliminary design]
+  * *Milestone 5*: [https://code.google.com/p/fbms/wiki/Milestone5 Updated Design and Near-Complete Implementation]
   
 == Other links ==
   * [https://code.google.com/p/fbms/source/list SVN log]
