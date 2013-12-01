@@ -1,0 +1,4 @@
+[2013-12-01 13:13:18,569]  INFO (Startup.java:43) - Program started
+[2013-12-01 13:13:18,670]  INFO (FirstStartWizard.java:64) - Started first run wizard
+[2013-12-01 13:13:19,782] DEBUG (FirstStartWizard.java:138) - First run wizard introduction panel drawn
+[2013-12-01 13:13:21,189] DEBUG (FirstStartWizard.java:133) - First run wizard closed in panel 1
