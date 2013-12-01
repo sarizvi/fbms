@@ -1,6 +1,9 @@
 #labels Phase-Requirements,Phase-Design,Phase-Implementation
 This page links to all documentation concerning FBMS.
 
+==User manual==
+Click [https://code.google.com/p/fbms/wiki/UserManual here] to see.
+
 == Main documentation ==
   * [https://code.google.com/p/fbms/wiki/TechnicalDetails Technical details document] - Contains an in-depth description of the interior workings of the project, including helpful API and library links (Currently outdated)
 
