@@ -51,7 +51,6 @@ In terms of file operations, there’s several operations that can occur:
 
   * A file is modified: if the file already exists, it is backed up and revisioned. If it doesn’t already exist, this is treated like a creation.
 
-  * A file is renamed: if the old name already exists, that is renamed, otherwise this is treated like a creation (under the new name). If the new name doesn’t already exist, we rename the file. If the new name already exists, we treat this like a modification, backing up and revisioning the file. The current behavior of “renaming” a file is to
-make a copy and move the revisions to the new name. To allow the old name to be restored, it is not deleted. Therefore, we end up with copies (this will be improved in future versions of the software, which will keep track of name history).
+  * A file is renamed: if the old name already exists, that is renamed, otherwise this is treated like a creation (under the new name). If the new name doesn’t already exist, we rename the file. If the new name already exists, we treat this like a modification, backing up and revisioning the file. The current behavior of “renaming” a file is to make a copy and move the revisions to the new name. To allow the old name to be restored, it is not deleted. Therefore, we end up with copies (this will be improved in future versions of the software, which will keep track of name history).
 
   * A file is deleted: The file is not removed from the backup directory, but files that no longer exist in the live directory will be marked with an exclamation mark in the file browser.
